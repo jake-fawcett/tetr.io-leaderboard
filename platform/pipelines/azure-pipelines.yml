@@ -10,9 +10,10 @@ variables:
   storageAccountName: stract${{ variables.environment }}
   storageAccountSku: Standard_LRS
   storageAccountTier: Hot
-  webAppName: webapp${{ variables.environment }}
-  webAppSku: F1
-  webAppSkuCapacity: 1
+  webAppServerName: webapp-server-${{ variables.environment }}
+  webAppServerSku: F1
+  webAppServerSkuCapacity: 1
+  webAppName: webapp-${{ variables.environment }}
 
 stages:
 - stage: Linting
