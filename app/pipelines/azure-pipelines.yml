@@ -2,7 +2,7 @@ trigger:
   - develop
 
 variables:
-  buildAgents: 'ubuntu-latest'
+  buildAgents: 'LocalPool'
   environment: dev
   serviceConnection: tetris-sp-${{ variables.environment }}
   resourceGroup: platform-tetris-${{ variables.environment }}
