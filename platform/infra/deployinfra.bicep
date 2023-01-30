@@ -22,6 +22,9 @@ param webAppServerSkuCapacity int
 @description('This is the Web App name')
 param webAppName string
 
+@description('This is the Web App name')
+param webAppLinuxFxVersion string
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   name: storageAccountName
   location: location
@@ -59,7 +62,7 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
   properties: {
     serverFarmId: webAppServer.id
     siteConfig: {
-      linuxFxVersion: 'PYTHON|3.9'
+      linuxFxVersion: webAppLinuxFxVersion
     }
   }
 }
