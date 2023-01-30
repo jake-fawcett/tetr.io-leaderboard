@@ -20,11 +20,6 @@ stages:
     displayName: Pre-Commit Linting
     steps:
       - checkout: self 
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '3.9'
-          addToPath: true
-          architecture: 'x64'
       - task: Bash@3
         displayName: 'Pre-Commit Linting'
         continueOnError: true
@@ -74,11 +69,6 @@ stages:
         deploy:
           steps:
           - download: current
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-              addToPath: true
-              architecture: 'x64'
           - task: AzureWebApp@1
             displayName: Deploy Webapp
             inputs:
