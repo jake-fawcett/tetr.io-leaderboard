@@ -46,6 +46,7 @@ stages:
     displayName: Build Infra Artifact
     steps:
       - download: current
+      - bash: ls
       - task: CopyFiles@2
         displayName: Copy infra code
         inputs:
