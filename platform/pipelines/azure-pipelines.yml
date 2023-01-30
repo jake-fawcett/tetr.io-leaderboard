@@ -20,7 +20,7 @@ stages:
   pool:
     vmImage: ${{ variables.buildAgents }}
   jobs:
-  - job: Pre-Commit Linting
+  - job: PreCommitLinting
     displayName: Pre-Commit Linting
     steps:
       - checkout: self 
@@ -41,9 +41,9 @@ stages:
             pre-commit install
             pre-commit run --all-files
           workingDirectory: 'platform'
-  - job:
+  - job: BuildInfra
+    dependsOn: PreCommitLinting
     displayName: Build Infra Artifact
-    dependsOn: PyLinting
     steps:
       - task: CopyFiles@2
         displayName: Copy infra code
