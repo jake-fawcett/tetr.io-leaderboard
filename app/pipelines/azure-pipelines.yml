@@ -33,8 +33,7 @@ stages:
           script: |
             set -eou pipefail
             trap exit 1 ERR
-            pip install --upgrade pip
-            pip install pre-commit
+            python3 -m pip install pre-commit
             pre-commit install
             pre-commit run --all-files
           workingDirectory: 'app'
@@ -47,7 +46,7 @@ stages:
         displayName: Copy app code
         inputs:
           Contents: |
-              application/**
+              app/**
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
       - task: ArchiveFiles@2
         displayName: Create webapp Artifact

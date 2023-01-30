@@ -36,8 +36,7 @@ stages:
           script: |
             set -eou pipefail
             trap exit 1 ERR
-            pip install --upgrade pip
-            pip install pre-commit
+            python3 -m pip install pre-commit
             pre-commit install
             pre-commit run --all-files
           workingDirectory: 'platform'
@@ -46,12 +45,11 @@ stages:
     displayName: Build Infra Artifact
     steps:
       - download: current
-      - bash: ls
       - task: CopyFiles@2
         displayName: Copy infra code
         inputs:
           Contents: |
-              **
+              platform/**
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
       - task: PublishBuildArtifacts@1
         displayName: Publish Artifact
