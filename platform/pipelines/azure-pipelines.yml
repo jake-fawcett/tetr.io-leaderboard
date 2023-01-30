@@ -10,10 +10,10 @@ variables:
   storageAccountName: stract${{ variables.environment }}
   storageAccountSku: Standard_LRS
   storageAccountTier: Hot
-  webAppServerName: webapp-server-${{ variables.environment }}
+  webAppServerName: platform-tetris-webapp-server-${{ variables.environment }}
   webAppServerSku: F1
   webAppServerSkuCapacity: 1
-  webAppName: webapp-${{ variables.environment }}
+  webAppName: platform-tetris-webapp-${{ variables.environment }}
 
 stages:
 - stage: Linting
