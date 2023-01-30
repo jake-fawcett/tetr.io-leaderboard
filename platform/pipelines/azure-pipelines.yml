@@ -1,0 +1,123 @@
+variables:
+  buildAgents: 'ubuntu-latest'
+  environment: dev
+  templateFile: platform/infra/deployinfra.bicep
+  serviceConnection: tetris-sp-${{ variables.environment }}
+  resourceGroup: platform-tetris-${{ variables.environment }}
+  storageAccountName: ${{ variables.resourceGroup }}-stract
+  storageAccountSku: Standard_LRS
+  storageAccountTier: Hot
+  webAppName: ${{ variables.resourceGroup }}-webapp
+  webAppSku: F1
+  webAppSkuCapacity: 1
+
+trigger:
+  - develop
+
+stages:
+
+- stage: Build
+  displayName: Build
+  pool:
+    vmImage: ${{ variables.buildAgents }}
+  jobs:
+  - job: Pre-Commit Linting
+    displayName: Pre-Commit Linting
+    steps:
+      - checkout: self 
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.9'
+          addToPath: true
+          architecture: 'x64'
+      - task: Bash@3
+        displayName: 'Pre-Commit Linting'
+        inputs:
+          targetType: 'inline'
+          script: |
+            set -eou pipefail
+            trap exit 1 ERR
+            pip install --upgrade pip
+            pip install pre-commit
+            pre-commit install
+            pre-commit run --all-files
+          workingDirectory: 'platform'
+  - job:
+    displayName: Build Infra Artifact
+    dependsOn: PyLinting
+    steps:
+      - task: CopyFiles@2
+        displayName: Copy infra code
+        inputs:
+          Contents: |
+              **
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Artifact
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'infra'
+          publishLocation: 'Container'
+
+- stage: DeployInfra
+  dependsOn: Build
+  jobs:     
+  - deployment: Infra
+    environment: ${{ variables.environment }}
+    pool:
+      vmImage: ${{ variables.buildAgents }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+          - task: AzureCLI@2
+            displayName: Deploy
+            inputs:
+              azureSubscription: ${{ variables.serviceConnection }}
+              failOnStandardError: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                if [[ $(az group exists -g ${{ variables.resourceGroup }}) == false ]]; then
+                  az group create --name ${{ variables.resourceGroup }} --location uksouth
+                fi
+
+                OUTPUT=$(az deployment group create \
+                  --resource-group ${{ variables.resourceGroup }} \
+                  --template-file ${{ variables.templateFile }} \
+                  --parameters ${{ variables.storageAccountName }} ${{ variables.storageAccountSku }} ${{ variables.storageAccountTier }} \
+                    ${{ variables.webAppName }} ${{ variables.webAppSku }} ${{ variables.webAppSkuCapacity }} \
+                  --query properties.outputs
+                )
+                echo "##vso[task.setvariable variable=DEPLOYOUTPUT}]"$OUTPUT
+              workingDirectory: '$(Pipeline.Workspace)/infra'
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+              addToPath: true
+              architecture: 'x64'
+          - task: AzureCLI@1
+            displayName: 'Test Infra'
+            inputs:
+              azureSubscription: ${{ variables.servicePrincipal }}
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -eou pipefail
+                trap exit 1 ERR
+                python3.9 -m venv venv
+                venv/bin/pip install --upgrade pip setuptools wheel
+                source venv/bin/activate
+                pip install -r requirements.txt
+                pytest -o junit_family=xunit2 --junitxml=test-infra.xml
+                deactivate
+                rm -rf venv
+              workingDirectory: '$(Pipeline.Workspace)/infra/tests'
+            env:
+              DEPLOYOUTPUT: $(DEPLOYOUTPUT)
+            continueOnError: true
+          - task: PublishTestResults@2
+            displayName: 'Publish Test results'
+            inputs:
+              testResultsFiles: '**/*.xml'
+              searchFolder: '$(Pipeline.Workspace)/infra/tests'

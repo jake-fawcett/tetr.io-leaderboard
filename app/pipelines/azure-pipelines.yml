@@ -1,0 +1,92 @@
+variables:
+  buildAgents: 'ubuntu-latest'
+  environment: dev
+  serviceConnection: tetris-sp-${{ variables.environment }}
+  resourceGroup: platform-tetris-${{ variables.environment }}
+  webAppType: webAppLinux
+  webAppName: ${{ variables.resourceGroup }}-webapp
+  runTimeStack: PYTHON|3.9
+  ArtifactName: app
+
+trigger:
+  - feature/*
+  - develop
+
+stages:
+
+- stage: Build
+  displayName: Build
+  pool:
+    vmImage: ${{ variables.buildAgents }}
+  jobs:
+  - job: Pre-Commit Linting
+    displayName: Pre-Commit Linting
+    steps:
+      - checkout: self 
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.9'
+          addToPath: true
+          architecture: 'x64'
+      - task: Bash@3
+        displayName: 'Pre-Commit Linting'
+        inputs:
+          targetType: 'inline'
+          script: |
+            set -eou pipefail
+            trap exit 1 ERR
+            pip install --upgrade pip
+            pip install pre-commit
+            pre-commit install
+            pre-commit run --all-files
+          workingDirectory: 'app'
+  - job:
+    displayName: Build App Artifact
+    dependsOn: PyLinting
+    steps:
+      - task: CopyFiles@2
+        displayName: Copy app code
+        inputs:
+          Contents: |
+              application/**
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      - task: ArchiveFiles@2
+        displayName: Create webapp Artifact
+        inputs: 
+          rootFolderOrFile: '$(Build.SourcesDirectory)/application/'
+          includeRootFolder: false
+          archiveType: zip
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+          replaceExistingArchive: true
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Artifact
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+          ArtifactName: ${{ variables.ArtifactName }}
+          publishLocation: 'Container'
+
+  - stage: DeployApp
+    dependsOn: Build
+    jobs:
+    - deployment: App
+      environment: ${{ variables.environment }}
+      pool:
+        vmImage: ${{ variables.buildAgents }}
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - download: current
+            - task: UsePythonVersion@0
+              inputs:
+                versionSpec: '3.9'
+                addToPath: true
+                architecture: 'x64'
+            - task: AzureWebApp@1
+              displayName: Deploy Webapp
+              inputs:
+                azureSubscription: ${{ variables.servicePrincipal }}
+                appType: ${{ variables.webAppType }}
+                appName: ${{ variables.webAppName }}
+                package: '$(Pipeline.Workspace)/${{ variables.ArtifactName }}/*.zip'
+                runtimeStack: ${{ variables.runTimeStack }}

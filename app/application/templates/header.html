@@ -1,0 +1,13 @@
+<div class="header-container">
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      <img src="{{ url_for('static', filename='images/bjss.png') }}" alt="BJSS Logo" width="160" height="64"/>
+    </a>
+    
+    <ul class="nav nav-pills">
+      <li class="nav-item"><a href="/" {% if request.path == '/' %}class="active nav-link"{% else %}class="nav-link"{% endif %} aria-current="page">Home</a></li>
+      <li class="nav-item"><a href="leaderboard" {% if request.path == '/leaderboard' %}class="active nav-link"{% else %}class="nav-link"{% endif %}>Leaderboard</a></li>
+      <li class="nav-item"><a href="submit" {% if request.path == '/submit' %}class="active nav-link"{% else %}class="nav-link"{% endif %}>Submit</a></li>
+    </ul>
+  </header>
+</div>
