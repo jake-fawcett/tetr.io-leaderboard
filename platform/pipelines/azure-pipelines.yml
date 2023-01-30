@@ -63,7 +63,8 @@ stages:
                   --resource-group ${{ variables.resourceGroup }} \
                   --template-file ${{ variables.templateFile }} \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
-                    webAppName=${{ variables.webAppName }} webAppSku=${{ variables.webAppSku }} webAppSkuCapacity=${{ variables.webAppSkuCapacity }} \
+                    webAppServerName=${{ variables.webAppServerName }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
+                    webAppName=${{ variables.webAppName }}
                   --query properties.outputs
                 )
                 echo "##vso[task.setvariable variable=DEPLOYOUTPUT}]"$OUTPUT

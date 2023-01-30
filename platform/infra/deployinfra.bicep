@@ -11,13 +11,16 @@ param storageAccountSku string
 param storageAccountTier string
 
 @description('This is the Web App name')
-param webAppName string
+param webAppServerName string
 
 @description('This is the Web App sku')
-param webAppSku string
+param webAppServerSku string
 
 @description('This is the Web App capacity')
-param webAppSkuCapacity int
+param webAppServerSkuCapacity int
+
+@description('This is the Web App name')
+param webAppName string
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   name: storageAccountName
@@ -40,13 +43,13 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
 }
 
 resource webAppServer 'Microsoft.Web/serverfarms@2020-06-01' = {
-  name: webAppName
+  name: webAppServerName
   location: location
   properties: {
   }
   sku: {
-    name: webAppSku
-    capacity: webAppSkuCapacity
+    name: webAppServerSku
+    capacity: webAppServerSkuCapacity
   }
 }
 
