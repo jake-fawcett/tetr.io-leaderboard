@@ -7,10 +7,10 @@ variables:
   templateFile: deployinfra.bicep
   serviceConnection: tetris-sp-${{ variables.environment }}
   resourceGroup: platform-tetris-${{ variables.environment }}
-  storageAccountName: ${{ variables.resourceGroup }}-stract
+  storageAccountName: stract${{ variables.environment }}
   storageAccountSku: Standard_LRS
   storageAccountTier: Hot
-  webAppName: ${{ variables.resourceGroup }}-webapp
+  webAppName: webapp${{ variables.environment }}
   webAppSku: F1
   webAppSkuCapacity: 1
 
