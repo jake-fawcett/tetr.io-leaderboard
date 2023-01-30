@@ -65,8 +65,7 @@ stages:
   jobs:     
   - deployment: Infra
     environment: ${{ variables.environment }}
-    pool:
-      vmImage: ${{ variables.buildAgents }}
+    pool: ${{ variables.buildAgents }}
     strategy:
       runOnce:
         deploy:
