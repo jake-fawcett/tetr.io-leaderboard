@@ -19,7 +19,7 @@ stages:
   pool:
     vmImage: ${{ variables.buildAgents }}
   jobs:
-  - job: Pre-Commit Linting
+  - job: PreCommitLinting
     displayName: Pre-Commit Linting
     steps:
       - checkout: self 
@@ -42,7 +42,7 @@ stages:
           workingDirectory: 'app'
   - job:
     displayName: Build App Artifact
-    dependsOn: PyLinting
+    dependsOn: PreCommitLinting
     steps:
       - task: CopyFiles@2
         displayName: Copy app code
