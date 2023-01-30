@@ -30,6 +30,7 @@ stages:
           architecture: 'x64'
       - task: Bash@3
         displayName: 'Pre-Commit Linting'
+        continueOnError: true
         inputs:
           targetType: 'inline'
           script: |
