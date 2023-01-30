@@ -1,3 +1,6 @@
+trigger:
+  - develop
+
 variables:
   buildAgents: 'ubuntu-latest'
   environment: dev
@@ -8,12 +11,7 @@ variables:
   runTimeStack: PYTHON|3.9
   ArtifactName: app
 
-trigger:
-  - feature/*
-  - develop
-
 stages:
-
 - stage: Build
   displayName: Build
   pool:
@@ -65,28 +63,28 @@ stages:
           ArtifactName: ${{ variables.ArtifactName }}
           publishLocation: 'Container'
 
-  - stage: DeployApp
-    dependsOn: Build
-    jobs:
-    - deployment: App
-      environment: ${{ variables.environment }}
-      pool:
-        vmImage: ${{ variables.buildAgents }}
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - download: current
-            - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.9'
-                addToPath: true
-                architecture: 'x64'
-            - task: AzureWebApp@1
-              displayName: Deploy Webapp
-              inputs:
-                azureSubscription: ${{ variables.servicePrincipal }}
-                appType: ${{ variables.webAppType }}
-                appName: ${{ variables.webAppName }}
-                package: '$(Pipeline.Workspace)/${{ variables.ArtifactName }}/*.zip'
-                runtimeStack: ${{ variables.runTimeStack }}
+- stage: DeployApp
+  dependsOn: Build
+  jobs:
+  - deployment: App
+    environment: ${{ variables.environment }}
+    pool:
+      vmImage: ${{ variables.buildAgents }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+              addToPath: true
+              architecture: 'x64'
+          - task: AzureWebApp@1
+            displayName: Deploy Webapp
+            inputs:
+              azureSubscription: ${{ variables.servicePrincipal }}
+              appType: ${{ variables.webAppType }}
+              appName: ${{ variables.webAppName }}
+              package: '$(Pipeline.Workspace)/${{ variables.ArtifactName }}/*.zip'
+              runtimeStack: ${{ variables.runTimeStack }}

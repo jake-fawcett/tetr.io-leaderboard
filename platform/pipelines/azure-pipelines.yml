@@ -1,3 +1,6 @@
+trigger:
+  - develop
+
 variables:
   buildAgents: 'ubuntu-latest'
   environment: dev
@@ -11,11 +14,7 @@ variables:
   webAppSku: F1
   webAppSkuCapacity: 1
 
-trigger:
-  - develop
-
 stages:
-
 - stage: Build
   displayName: Build
   pool:
