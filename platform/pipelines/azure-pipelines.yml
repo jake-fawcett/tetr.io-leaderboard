@@ -17,8 +17,7 @@ variables:
 stages:
 - stage: Build
   displayName: Build
-  pool:
-    vmImage: ${{ variables.buildAgents }}
+  pool: ${{ variables.buildAgents }}
   jobs:
   - job: PreCommitLinting
     displayName: Pre-Commit Linting
