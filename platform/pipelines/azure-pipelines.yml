@@ -11,6 +11,7 @@ variables:
   storageAccountSku: Standard_LRS
   storageAccountTier: Hot
   webAppServerName: platform-tetris-webapp-server-${{ variables.environment }}
+  webAppServerKind: linux
   webAppServerSku: F1
   webAppServerSkuCapacity: 1
   webAppName: platform-tetris-webapp-${{ variables.environment }}
@@ -65,7 +66,7 @@ stages:
                   --resource-group ${{ variables.resourceGroup }} \
                   --template-file ${{ variables.templateFile }} \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
-                    webAppServerName=${{ variables.webAppServerName }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
+                    webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
                     webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} \
                   --query properties.outputs
                 )

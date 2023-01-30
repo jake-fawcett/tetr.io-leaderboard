@@ -10,19 +10,22 @@ param storageAccountSku string
 @description('This is the Storage Account tier')
 param storageAccountTier string
 
-@description('This is the Web App name')
+@description('This is the Web App Server name')
 param webAppServerName string
 
-@description('This is the Web App sku')
+@description('This is the Web App Server kind')
+param webAppServerKind string
+
+@description('This is the Web App Server sku')
 param webAppServerSku string
 
-@description('This is the Web App capacity')
+@description('This is the Web App Server capacity')
 param webAppServerSkuCapacity int
 
 @description('This is the Web App name')
 param webAppName string
 
-@description('This is the Web App name')
+@description('This is the Web App Software version')
 param webAppLinuxFxVersion string
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
@@ -48,6 +51,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
 resource webAppServer 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: webAppServerName
   location: location
+  kind: webAppServerKind
   properties: {
   }
   sku: {
