@@ -69,6 +69,12 @@ stages:
         deploy:
           steps:
           - download: current
+          - task: AzurePowerShell@5
+            displayName: Install Azure CLI
+            inputs: 
+              scriptType: InlineScript
+              Inline: |
+                $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi
           - task: AzureCLI@2
             displayName: Deploy
             inputs:
@@ -95,7 +101,7 @@ stages:
               versionSpec: '3.9'
               addToPath: true
               architecture: 'x64'
-          - task: AzureCLI@1
+          - task: AzureCLI@2
             displayName: 'Test Infra'
             inputs:
               azureSubscription: ${{ variables.servicePrincipal }}
