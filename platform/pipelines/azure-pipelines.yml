@@ -75,7 +75,7 @@ stages:
           - task: AzureCLI@2
             displayName: 'Test Infra'
             inputs:
-              azureSubscription: ${{ variables.servicePrincipal }}
+              azureSubscription: ${{ variables.serviceConnection }}
               scriptLocation: inlineScript
               inlineScript: |
                 set -eou pipefail

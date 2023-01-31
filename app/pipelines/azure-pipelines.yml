@@ -72,7 +72,7 @@ stages:
           - task: AzureWebApp@1
             displayName: Deploy Webapp
             inputs:
-              azureSubscription: ${{ variables.servicePrincipal }}
+              azureSubscription: ${{ variables.serviceConnection }}
               appType: ${{ variables.webAppType }}
               appName: ${{ variables.webAppName }}
               package: '$(Pipeline.Workspace)/${{ variables.ArtifactName }}/*.zip'
