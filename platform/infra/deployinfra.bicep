@@ -53,6 +53,7 @@ resource webAppServer 'Microsoft.Web/serverfarms@2020-06-01' = {
   location: location
   kind: webAppServerKind
   properties: {
+    reserved: true
   }
   sku: {
     name: webAppServerSku
