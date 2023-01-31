@@ -76,6 +76,8 @@ stages:
             displayName: 'Test Infra'
             inputs:
               azureSubscription: ${{ variables.serviceConnection }}
+              failOnStandardError: true
+              scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
                 set -eou pipefail
