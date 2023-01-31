@@ -20,4 +20,3 @@ variables:
 # App
   webAppType: webAppLinux
   runTimeStack: PYTHON|3.9
-  ArtifactName: app

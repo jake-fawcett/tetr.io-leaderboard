@@ -46,6 +46,8 @@ stages:
           archiveFile: 'Application$(Build.BuildId).zip'
           replaceExistingArchive: true
   - deployment: Deploy
+    displayName: Deploy App
+    dependsOn: Build
     environment: ${{ variables.environment }}
     pool: ${{ variables.buildAgents }}
     strategy:
