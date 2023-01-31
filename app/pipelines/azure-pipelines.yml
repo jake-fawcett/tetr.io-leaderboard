@@ -4,7 +4,7 @@ trigger:
 variables:
   buildAgents: 'LocalPool'
   environment: dev
-  serviceConnection: tetris-sp-${{ variables.environment }}
+  serviceConnection: tetris-sc-${{ variables.environment }}
   resourceGroup: platform-tetris-${{ variables.environment }}
   webAppType: webAppLinux
   webAppName: ${{ variables.resourceGroup }}-webapp

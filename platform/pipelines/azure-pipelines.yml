@@ -5,7 +5,7 @@ variables:
   buildAgents: 'LocalPool'
   environment: dev
   templateFile: deployinfra.bicep
-  serviceConnection: tetris-sp-${{ variables.environment }}
+  serviceConnection: tetris-sc-${{ variables.environment }}
   resourceGroup: platform-tetris-${{ variables.environment }}
   storageAccountName: stract${{ variables.environment }}
   storageAccountSku: Standard_LRS
