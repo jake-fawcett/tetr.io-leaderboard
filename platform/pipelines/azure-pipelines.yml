@@ -12,7 +12,7 @@ variables:
   storageAccountTier: Hot
   webAppServerName: platform-tetris-webapp-server-${{ variables.environment }}
   webAppServerKind: linux
-  webAppServerSku: F1
+  webAppServerSku: B1
   webAppServerSkuCapacity: 1
   webAppName: platform-tetris-webapp-${{ variables.environment }}
   webAppLinuxFxVersion: "'PYTHON|3.9'"
