@@ -15,7 +15,7 @@ variables:
   webAppServerSku: F1
   webAppServerSkuCapacity: 1
   webAppName: platform-tetris-webapp-${{ variables.environment }}
-  webAppLinuxFxVersion: "'PYTHON|3.11'"
+  webAppLinuxFxVersion: 'PYTHON|3.9'
 
 stages:
 - stage: Linting
