@@ -1,21 +1,17 @@
 trigger:
   - develop
 
+parameters:
+  - name: environment
+    displayName: "Environment Selection"
+    type: string
+    default: dev
+    values:
+      - dev
+      - prod
+
 variables:
-  buildAgents: 'LocalPool'
-  environment: dev
-  templateFile: deployinfra.bicep
-  serviceConnection: tetris-sc-${{ variables.environment }}
-  resourceGroup: platform-tetris-${{ variables.environment }}
-  storageAccountName: stract${{ variables.environment }}
-  storageAccountSku: Standard_LRS
-  storageAccountTier: Hot
-  webAppServerName: platform-tetris-webapp-server-${{ variables.environment }}
-  webAppServerKind: linux
-  webAppServerSku: B1
-  webAppServerSkuCapacity: 1
-  webAppName: platform-tetris-webapp-${{ variables.environment }}
-  webAppLinuxFxVersion: "'PYTHON|3.9'"
+  - template: vars-${{ parameters.environment }}.yml
 
 stages:
 - stage: Linting
@@ -36,8 +32,8 @@ stages:
             trap exit 1 ERR
             python -m pip install pre-commit
             pre-commit install
-            pre-commit run --all-files
-          workingDirectory: 'platform'
+            pre-commit run --files infrastructure
+          workingDirectory: '.'
 
 - stage: DeployInfra
   dependsOn: Linting
@@ -71,7 +67,7 @@ stages:
                   --query properties.outputs
                 )
                 echo "##vso[task.setvariable variable=DEPLOYOUTPUT}]"$OUTPUT
-              workingDirectory: 'platform/infra'
+              workingDirectory: 'infrastructure'
           - task: AzureCLI@2
             displayName: 'Test Infra'
             inputs:
@@ -86,15 +82,15 @@ stages:
                 venv/bin/pip install --upgrade pip setuptools wheel
                 source venv/bin/activate
                 pip install -r requirements.txt
-                pytest -o junit_family=xunit2 --junitxml=test-infra.xml
+                pytest -o junit_family=xunit2 --junitxml=test-infrastructure.xml
                 deactivate
                 rm -rf venv
-              workingDirectory: 'platform/infra/tests'
+              workingDirectory: 'infrastructure/tests'
             env:
               DEPLOYOUTPUT: $(DEPLOYOUTPUT)
             continueOnError: true
           - task: PublishTestResults@2
             displayName: 'Publish Test results'
             inputs:
-              testResultsFiles: '**/*.xml'
-              searchFolder: 'platform/infra/tests'
+              testResultsFiles: '**/test-infrastructure.xml'
+              searchFolder: 'infrastructure/tests'

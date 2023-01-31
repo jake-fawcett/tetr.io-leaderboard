@@ -1,0 +1,23 @@
+variables:
+# General
+  buildAgents: 'LocalPool'
+  environment: dev
+  templateFile: deployinfra.bicep
+  serviceConnection: tetris-sc-${{ variables.environment }}
+  resourceGroup: platform-tetris-${{ variables.environment }}
+
+# Infra
+  storageAccountName: stract${{ variables.environment }}
+  storageAccountSku: Standard_LRS
+  storageAccountTier: Hot
+  webAppServerName: platform-tetris-webapp-server-${{ variables.environment }}
+  webAppServerKind: linux
+  webAppServerSku: B1
+  webAppServerSkuCapacity: 1
+  webAppName: platform-tetris-webapp-${{ variables.environment }}
+  webAppLinuxFxVersion: "'PYTHON|3.9'"
+
+# App
+  webAppType: webAppLinux
+  runTimeStack: PYTHON|3.9
+  ArtifactName: app

@@ -1,25 +1,26 @@
 trigger:
   - develop
 
+parameters:
+  - name: environment
+    displayName: "Environment Selection"
+    type: string
+    default: dev
+    values:
+      - dev
+      - prod
+
 variables:
-  buildAgents: 'LocalPool'
-  environment: dev
-  serviceConnection: tetris-sc-${{ variables.environment }}
-  resourceGroup: platform-tetris-${{ variables.environment }}
-  webAppType: webAppLinux
-  webAppName: ${{ variables.resourceGroup }}-webapp
-  runTimeStack: PYTHON|3.9
-  ArtifactName: app
+  - template: vars-${{ parameters.environment }}.yml
 
 stages:
-- stage: Build
+- stage: LintBuildDeploy
   displayName: Build
   pool: ${{ variables.buildAgents }}
   jobs:
   - job: PreCommitLinting
     displayName: Pre-Commit Linting
     steps:
-      - checkout: self 
       - task: Bash@3
         displayName: 'Pre-Commit Linting'
         continueOnError: true
@@ -30,44 +31,32 @@ stages:
             trap exit 1 ERR
             python -m pip install pre-commit
             pre-commit install
-            pre-commit run --all-files
-          workingDirectory: 'app'
-  - job:
+            pre-commit run --files application
+          workingDirectory: '.'
+  - job: Build
     displayName: Build App Artifact
     dependsOn: PreCommitLinting
     steps:
-      - download: current
       - task: ArchiveFiles@2
         displayName: Create webapp Artifact
         inputs: 
-          rootFolderOrFile: 'app/application/'
+          rootFolderOrFile: 'application/'
           includeRootFolder: false
           archiveType: zip
-          archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+          archiveFile: 'Application$(Build.BuildId).zip'
           replaceExistingArchive: true
-      - task: PublishBuildArtifacts@1
-        displayName: Publish Artifact
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
-          ArtifactName: ${{ variables.ArtifactName }}
-          publishLocation: 'Container'
-
-- stage: DeployApp
-  dependsOn: Build
-  jobs:
-  - deployment: App
+  - deployment: Deploy
     environment: ${{ variables.environment }}
     pool: ${{ variables.buildAgents }}
     strategy:
       runOnce:
         deploy:
           steps:
-          - download: current
           - task: AzureWebApp@1
             displayName: Deploy Webapp
             inputs:
               azureSubscription: ${{ variables.serviceConnection }}
               appType: ${{ variables.webAppType }}
               appName: ${{ variables.webAppName }}
-              package: '$(Pipeline.Workspace)/${{ variables.ArtifactName }}/*.zip'
+              package: 'Application$(Build.BuildId).zip'
               runtimeStack: ${{ variables.runTimeStack }}
