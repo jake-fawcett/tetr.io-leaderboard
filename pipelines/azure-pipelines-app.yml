@@ -31,12 +31,23 @@ stages:
             trap exit 1 ERR
             python -m pip install pre-commit
             pre-commit install
-            pre-commit run --files application
-          workingDirectory: '.'
+            pre-commit run --all-files
+          workingDirectory: 'application'
   - job: Build
     displayName: Build App Artifact
     dependsOn: PreCommitLinting
     steps:
+      - task: Bash@3
+        displayName: 'Build Venv'
+        continueOnError: true
+        inputs:
+          targetType: 'inline'
+          script: |
+            python -m venv antenv
+            source antenv/bin/activate
+            python -m pip install --upgrade pip setuptools
+            pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
+          workingDirectory: 'application'
       - task: ArchiveFiles@2
         displayName: Create webapp Artifact
         inputs: 
