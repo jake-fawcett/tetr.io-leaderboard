@@ -68,6 +68,12 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
     serverFarmId: webAppServer.id
     siteConfig: {
       linuxFxVersion: webAppLinuxFxVersion
+      appSettings: [
+        {
+          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
+          value: 'True'
+        }
+      ]
     }
   }
 }
