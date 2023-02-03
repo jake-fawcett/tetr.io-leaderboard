@@ -21,6 +21,14 @@ table.leaderboard thead {
   background-color: purple;
 }
 
+.nav-link.active {
+  background-color: purple !important;
+}
+
+.nav-link {
+  color: purple;
+}
+
 .footer-container {
   position:absolute;
   bottom:0;
