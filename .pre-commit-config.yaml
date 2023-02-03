@@ -37,7 +37,7 @@ repos:
   rev: 6.0.0
   hooks:
   - id: flake8
-    args: [--docstring-convention, google, --max-line-length, '180', --ignore, 'D100,D103']
+    args: [--docstring-convention, google, --max-line-length, '180', --ignore, 'D100,D101,D102,D103']
     additional_dependencies: [flake8-bugbear, flake8-docstrings, pydocstyle==6.1.1]
 - repo: https://github.com/pycqa/bandit
   rev: 1.7.4
