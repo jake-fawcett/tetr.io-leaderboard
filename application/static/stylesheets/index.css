@@ -5,20 +5,20 @@ table.leaderboard {
   background-color: #FFFFFF;
   border-collapse: collapse;
   border-width: 2px;
-  border-color: #7ea8f8;
+  border-color: purple;
   border-style: solid;
   color: #000000;
 }
   
 table.leaderboard td, table.leaderboard th {
   border-width: 2px;
-  border-color: #7ea8f8;
+  border-color: purple;
   border-style: solid;
   padding: 5px;
 }
   
 table.leaderboard thead {
-  background-color: #7ea8f8;
+  background-color: purple;
 }
 
 .footer-container {
@@ -58,5 +58,3 @@ form {
       max-height: 12%;
   }
 }
-
-
