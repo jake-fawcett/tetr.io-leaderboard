@@ -39,6 +39,11 @@ form {
   justify-content: center !important;
 }
 
+[type=submit] {
+  background-color: #DD0AB2;
+  border: black;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (max-width: 768px) { 
   .footer-container {
