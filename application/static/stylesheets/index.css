@@ -5,28 +5,28 @@ table.leaderboard {
   background-color: #FFFFFF;
   border-collapse: collapse;
   border-width: 2px;
-  border-color: purple;
+  border-color: #DD0AB2;
   border-style: solid;
   color: #000000;
 }
   
 table.leaderboard td, table.leaderboard th {
   border-width: 2px;
-  border-color: purple;
+  border-color: #DD0AB2;
   border-style: solid;
   padding: 5px;
 }
   
 table.leaderboard thead {
-  background-color: purple;
+  background-color: #DD0AB2;
 }
 
 .nav-link.active {
-  background-color: purple !important;
+  background-color: #DD0AB2 !important;
 }
 
 .nav-link {
-  color: purple;
+  color: #DD0AB2;
 }
 
 .footer-container {
