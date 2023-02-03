@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: 
+      - main
+
+jobs:
+    build:
+        name: Call Azure Pipeline
+        runs-on: ubuntu-latest
+        steps:
+        - name: Azure Pipelines Action
+          uses: Azure/pipelines@v1
+          with:
+            azure-devops-project-url: https://dev.azure.com/jakefawcett2298/Jake-Fawcett
+            azure-pipeline-name: 'platform-tetris-infra'
+            azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+        - name: Azure Pipelines Action
+          uses: Azure/pipelines@v1
+          with:
+            azure-devops-project-url: https://dev.azure.com/jakefawcett2298/Jake-Fawcett
+            azure-pipeline-name: 'platform-tetris-app'
+            azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
