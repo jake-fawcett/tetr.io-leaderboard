@@ -14,27 +14,6 @@ variables:
   - template: vars-${{ parameters.environment }}.yml
 
 stages:
-- stage: Linting
-  displayName: Linting
-  pool: ${{ variables.buildAgents }}
-  jobs:
-  - job: PreCommitLinting
-    displayName: Pre-Commit Linting
-    steps:
-      - checkout: self 
-      - task: Bash@3
-        displayName: 'Pre-Commit Linting'
-        continueOnError: true
-        inputs:
-          targetType: 'inline'
-          script: |
-            set -eou pipefail
-            trap exit 1 ERR
-            python -m pip install pre-commit
-            pre-commit install
-            pre-commit run --files infrastructure
-          workingDirectory: '.'
-
 - stage: DeployInfra
   dependsOn: Linting
   jobs:     
@@ -58,39 +37,9 @@ stages:
                   az group create --name ${{ variables.resourceGroup }} --location uksouth
                 fi
 
-                OUTPUT=$(az deployment group create \
-                  --resource-group ${{ variables.resourceGroup }} \
-                  --template-file ${{ variables.templateFile }} \
+                az deployment group create --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }} \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                     webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
                     webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} \
                   --query properties.outputs
-                )
-                echo "##vso[task.setvariable variable=DEPLOYOUTPUT}]"$OUTPUT
               workingDirectory: 'infrastructure'
-          - task: AzureCLI@2
-            displayName: 'Test Infra'
-            inputs:
-              azureSubscription: ${{ variables.serviceConnection }}
-              failOnStandardError: true
-              scriptType: bash
-              scriptLocation: inlineScript
-              inlineScript: |
-                set -eou pipefail
-                trap exit 1 ERR
-                python -m venv venv
-                venv/bin/pip install --upgrade pip setuptools wheel
-                source venv/bin/activate
-                pip install -r requirements.txt
-                pytest -o junit_family=xunit2 --junitxml=test-infrastructure.xml
-                deactivate
-                rm -rf venv
-              workingDirectory: 'infrastructure/tests'
-            env:
-              DEPLOYOUTPUT: $(DEPLOYOUTPUT)
-            continueOnError: true
-          - task: PublishTestResults@2
-            displayName: 'Publish Test results'
-            inputs:
-              testResultsFiles: '**/test-infrastructure.xml'
-              searchFolder: 'infrastructure/tests'

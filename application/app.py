@@ -39,8 +39,8 @@ def submitResults():
         usernames = list(request.form.values())
         if '' in usernames:
             return render_template("submit-results.html", num_players=num_players, buttonStatus="Unsuccessful - please enter a valid input.")
-        calc_mmr(usernames)
-        return render_template("submit-results.html", num_players=num_players, buttonStatus="")
+        result_string = "New MMRs \n" + '\n'.join([user["User"] + ": " + user["MMR"] + "," for user in calc_mmr(usernames)])
+        return render_template("submit-results.html", num_players=num_players, buttonStatus=result_string)
     return render_template("submit-results.html", num_players=num_players, buttonStatus="")
 
 

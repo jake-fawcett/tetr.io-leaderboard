@@ -1,6 +1,6 @@
 import pandas as pd
 from azure.core.exceptions import ResourceExistsError
-from azure.data.tables import TableClient
+from azure.data.tables import TableClient, UpdateMode
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.storage import StorageManagementClient
 from multielo import MultiElo
@@ -35,21 +35,31 @@ def get_leaderboard_data():
     tables = sort.to_html(classes="leaderboard", header="true", index=False)
     return tables
 
-def get_or_create_users(usernames):
-    table_client = get_table_client()
+def get_or_create_users(table_client, usernames):
     users=[]
     for username in usernames:
         try:
-            table_client.create_entity({"PartitionKey": "Users", "RowKey": username.lower(),"User": username, "MMR": "1000"})
-            users.append({"User": username, "MMR": "2000"})
+            entity={"PartitionKey": "Users", "RowKey": username.lower(),"User": username, "MMR": "1000"}
+            table_client.create_entity(entity)
+            users.append(entity)
         except ResourceExistsError:
             print(f"""User: {username} already exists!""")
-            print(table_client.get_entity(partition_key="Users", row_key=username.lower()))
+            entity = table_client.get_entity(partition_key="Users", row_key=username.lower())
+            users.append(entity)
     return users
 
+def update_users(table_client, users):
+    for user in users:
+        table_client.update_entity(
+            mode=UpdateMode.MERGE, entity=user
+        )
+
 def calc_mmr(usernames):
-    users = get_or_create_users(usernames)
-    print(users)
+    table_client = get_table_client()
+    users = get_or_create_users(table_client, usernames)
     elo = MultiElo()
-    elo.get_new_ratings(np.array([1200, 1000]))
-    return winner_mmr, loser_mmr
+    new_ratings = elo.get_new_ratings([int(user["MMR"]) for user in users])
+    for i, new_rating in enumerate(new_ratings):
+        users[i]["MMR"] = str(round(new_rating))
+    update_users(table_client, users)
+    return users
