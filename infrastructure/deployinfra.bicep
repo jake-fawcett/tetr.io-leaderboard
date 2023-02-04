@@ -93,6 +93,3 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
   }
 }
 
-output serverFarmID string = webAppServer.id
-output webAppID string = webApp.id
-output storageID string = storageAccount.id
