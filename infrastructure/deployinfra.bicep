@@ -32,12 +32,13 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   name: storageAccountName
   location: location
   properties: {
+    allowBlobPublicAccess: true
     accessTier: storageAccountTier
     supportsHttpsTrafficOnly: true
     minimumTlsVersion: 'TLS1_2'
     networkAcls: {
       bypass: 'Logging, Metrics, AzureServices'
-      defaultAction: 'Allow'
+      defaultAction: 'Deny'
     }
   }
   sku: {
