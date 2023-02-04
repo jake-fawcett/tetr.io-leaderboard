@@ -38,7 +38,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
     minimumTlsVersion: 'TLS1_2'
     networkAcls: {
       bypass: 'Logging, Metrics, AzureServices'
-      defaultAction: 'Deny'
+      defaultAction: 'Allow'
     }
   }
   sku: {
