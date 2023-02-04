@@ -76,6 +76,9 @@ resource webAppServer 'Microsoft.Web/serverfarms@2020-06-01' = {
 resource webApp 'Microsoft.Web/sites@2020-06-01' = {
   name: webAppName
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: webAppServer.id
     siteConfig: {

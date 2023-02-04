@@ -41,4 +41,8 @@ stages:
                     webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
                     webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} \
                   --query properties.outputs
+
+                storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id --out tsv)
+                webappIdentityId=$(az resource list -n ${{ variables.webAppName }} --query [*].identity.principalId --out tsv)
+                az role assignment create --assignee $webappIdentityId --role 'Storage Blob Data Contributor' --scope $storageId
               workingDirectory: 'infrastructure'
