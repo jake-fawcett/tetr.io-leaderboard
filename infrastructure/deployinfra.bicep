@@ -60,7 +60,7 @@ resource usersTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2022
   properties: {}
 }
 
-resource webAppServer 'Microsoft.Web/serverfarms@2021-02-01' = {
+resource webAppServer 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: webAppServerName
   location: location
   kind: webAppServerKind
@@ -73,7 +73,7 @@ resource webAppServer 'Microsoft.Web/serverfarms@2021-02-01' = {
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2021-02-01' = {
+resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: webAppName
   location: location
   properties: {
