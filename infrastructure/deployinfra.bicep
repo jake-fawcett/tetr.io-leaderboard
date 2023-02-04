@@ -48,6 +48,18 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
   kind: 'StorageV2'
 }
 
+resource storageAccountTableService 'Microsoft.Storage/storageAccounts/tableServices@2022-05-01' = {
+  name: 'default'
+  parent: storageAccount
+  properties: {}
+}
+
+resource usersTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2022-05-01' = {
+  name: 'users'
+  parent: storageAccountTableService
+  properties: {}
+}
+
 resource webAppServer 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: webAppServerName
   location: location

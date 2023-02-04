@@ -11,14 +11,16 @@
      <main>
         {% include "header.html" %}
 
-        <form method="post" action="{{url_for('submitPlayers')}}">
+        <form method="post" action="{{url_for('submitResults', num_players=num_players)}}">
           <div class="col-md-6 mx-auto text-center">
               <div class="gap-2 d-flex justify-content-center align-items-center my-4">
-                <h2>Number of Players:</h2>
+                <h2>Results:</h2>
               </div>
-              <div class="gap-2 d-flex justify-content-center align-items-center my-4">
-                <input type="number" class="form-control" name="num-players"  default="4" min="0" max="99" onkeyup="if(value<0) value=0; if(value>99) value=99;" />
-              </div>
+              {% for i in range(num_players) %}
+                <div class="gap-2 d-flex justify-content-center align-items-center my-4">
+                  <input type="text" class="form-control" name="player-name-{{i}}"  placeholder="player-name" style="max-width: 256px;">
+                </div>
+              {% endfor %}
        
               <div class="d-flex justify-content-center align-items-center my-4">
                 <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Submit</button>
