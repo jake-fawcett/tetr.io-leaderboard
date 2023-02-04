@@ -60,7 +60,7 @@ resource usersTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2022
   properties: {}
 }
 
-resource webAppServer 'Microsoft.Web/serverfarms@2020-06-01' = {
+resource webAppServer 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: webAppServerName
   location: location
   kind: webAppServerKind
@@ -73,7 +73,7 @@ resource webAppServer 'Microsoft.Web/serverfarms@2020-06-01' = {
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2020-06-01' = {
+resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: webAppName
   location: location
   properties: {
@@ -88,8 +88,8 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
       ]
     }
   }
+  identity: {
+    type: 'SystemAssigned'
+  }
 }
 
-output serverFarmID string = webAppServer.id
-output webAppID string = webApp.id
-output storageID string = storageAccount.id
