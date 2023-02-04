@@ -43,7 +43,6 @@ stages:
 
                 storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id --out tsv)
                 echo $storageId
-                webappIdentityId=$(az resource list -n ${{ variables.webAppName }} --query [*].identity.principalId --out tsv)
-                echo $webappIdentityId
-                az role assignment create --assignee $webappIdentityId --role 'Storage Blob Data Contributor' --scope $storageId
+                # Bicep seems to ignores the identity parameter, so using the cli
+                az webapp identity assign -g MyResourceGroup -n MyUniqueApp --identities [system] --role 'Storage Blob Data Contributor' --scope $storageId
               workingDirectory: 'infrastructure'
