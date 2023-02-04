@@ -15,7 +15,6 @@ variables:
 
 stages:
 - stage: DeployInfra
-  dependsOn: Linting
   jobs:     
   - deployment: Infra
     environment: ${{ variables.environment }}
