@@ -1,5 +1,4 @@
-trigger:
-  - develop
+trigger: none
 
 parameters:
   - name: environment
