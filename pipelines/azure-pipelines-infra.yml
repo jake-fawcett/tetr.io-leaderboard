@@ -1,0 +1,44 @@
+trigger:
+  - develop
+
+parameters:
+  - name: environment
+    displayName: "Environment Selection"
+    type: string
+    default: dev
+    values:
+      - dev
+      - prod
+
+variables:
+  - template: vars-${{ parameters.environment }}.yml
+
+stages:
+- stage: DeployInfra
+  jobs:     
+  - deployment: Infra
+    environment: ${{ variables.environment }}
+    pool: ${{ variables.buildAgents }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+          - task: AzureCLI@2
+            displayName: Deploy
+            inputs:
+              azureSubscription: ${{ variables.serviceConnection }}
+              failOnStandardError: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                if [[ $(az group exists -g ${{ variables.resourceGroup }}) == false ]]; then
+                  az group create --name ${{ variables.resourceGroup }} --location uksouth
+                fi
+
+                az deployment group create --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }} \
+                  --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
+                    webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
+                    webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} \
+                  --query properties.outputs
+              workingDirectory: 'infrastructure'

@@ -1,0 +1,8 @@
+Flask
+azure-data-tables
+pandas
+azure-storage-blob
+azure-identity
+azure-mgmt-resource
+azure-mgmt-storage
+git+https://github.com/djcunningham0/multielo.git

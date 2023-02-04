@@ -1,0 +1,65 @@
+trigger:
+  - develop
+
+parameters:
+  - name: environment
+    displayName: "Environment Selection"
+    type: string
+    default: dev
+    values:
+      - dev
+      - prod
+
+variables:
+  - template: vars-${{ parameters.environment }}.yml
+
+stages:
+- stage: LintBuildDeploy
+  displayName: Build
+  pool: ${{ variables.buildAgents }}
+  jobs:
+  - job: PreCommitLinting
+    displayName: Pre-Commit Linting
+    steps:
+      - task: Bash@3
+        displayName: 'Pre-Commit Linting'
+        continueOnError: true
+        inputs:
+          targetType: 'inline'
+          script: |
+            set -eou pipefail
+            trap exit 1 ERR
+            python -m pip install pre-commit
+            pre-commit install
+            pre-commit run --all-files
+          workingDirectory: 'application'
+  - job: Build
+    displayName: Build App Artifact
+    dependsOn: PreCommitLinting
+    steps:
+      - task: ArchiveFiles@2
+        displayName: Create webapp Artifact
+        inputs: 
+          rootFolderOrFile: 'application/'
+          includeRootFolder: false
+          archiveType: zip
+          archiveFile: 'Application$(Build.BuildId).zip'
+          replaceExistingArchive: true
+  - deployment: Deploy
+    displayName: Deploy App
+    dependsOn: Build
+    environment: ${{ variables.environment }}
+    pool: ${{ variables.buildAgents }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: Deploy Webapp
+            inputs:
+              azureSubscription: ${{ variables.serviceConnection }}
+              appType: ${{ variables.webAppType }}
+              appName: ${{ variables.webAppName }}
+              package: 'Application$(Build.BuildId).zip'
+              runtimeStack: ${{ variables.runTimeStack }}
+              deploymentMethod: zipDeploy

@@ -1,0 +1,73 @@
+table.leaderboard {
+  margin-left:auto; 
+  margin-right:auto;
+  width: 50%;
+  background-color: #FFFFFF;
+  border-collapse: collapse;
+  border-width: 2px;
+  border-color: #DD0AB2;
+  border-style: solid;
+  color: #000000;
+}
+  
+table.leaderboard td, table.leaderboard th {
+  border-width: 2px;
+  border-color: #DD0AB2;
+  border-style: solid;
+  padding: 5px;
+}
+  
+table.leaderboard thead {
+  background-color: #DD0AB2;
+}
+
+.nav-link.active {
+  background-color: #DD0AB2 !important;
+}
+
+.nav-link {
+  color: #DD0AB2;
+}
+
+.footer-container {
+  position:absolute;
+  bottom:0;
+  width: 100%;
+}
+
+form {
+  justify-content: center !important;
+}
+
+[type=submit] {
+  background-color: #DD0AB2;
+  border: black;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (max-width: 768px) { 
+  .footer-container {
+      max-height: 13.5%;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 992px) { 
+  .footer-container {
+      max-height: 13%;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and  (max-width: 1200px) { 
+  .footer-container {
+      max-height: 12.5%;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+  .footer-container {
+      max-height: 12%;
+  }
+}
