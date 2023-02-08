@@ -29,7 +29,7 @@ repos:
     additional_dependencies: [toml]
     args: [--style "google" ]
 - repo: https://github.com/psf/black
-  rev: 22.12.0
+  rev: 23.1.0
   hooks:
     - id: black
       args: [--line-length, '180']
@@ -37,10 +37,17 @@ repos:
   rev: 6.0.0
   hooks:
   - id: flake8
-    args: [--docstring-convention, google, --max-line-length, '180', --ignore, 'D100,D101,D102,D103']
+    args: [--docstring-convention, google, --max-line-length, '180', --ignore, 'D100,D101,D102,D103,D104']
     additional_dependencies: [flake8-bugbear, flake8-docstrings, pydocstyle==6.1.1]
 - repo: https://github.com/pycqa/bandit
   rev: 1.7.4
   hooks:
   - id: bandit
     args: [--skip, B608]
+- repo: https://github.com/Jake-Fawcett/azure-pre-commit-hooks
+  rev: 9783767b047840320732cec470ca5ada66aa7d6c
+  hooks:
+    - id: azure-bicep-build
+      verbose: true
+    - id: arm-bicep-psrule-linting
+      verbose: true
