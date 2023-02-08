@@ -2,8 +2,6 @@ execution:
   notProcessedWarning: false
 
 configuration:
-  # Enable expansion of Azure Template files.
-  AZURE_PARAMETER_FILE_EXPANSION: true
   # Enable expansion of Azure Bicep files.
   AZURE_BICEP_FILE_EXPANSION: true
   # Configure the timeout for bicep build to 15 seconds.
