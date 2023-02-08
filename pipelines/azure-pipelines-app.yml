@@ -31,7 +31,7 @@ stages:
             trap exit 1 ERR
             python -m pip install pre-commit
             pre-commit install
-            pre-commit run --all-files
+            SKIP=azure-bicep-build,arm-bicep-psrule-linting pre-commit run --all-files
           workingDirectory: 'application'
   - job: Build
     displayName: Build App Artifact

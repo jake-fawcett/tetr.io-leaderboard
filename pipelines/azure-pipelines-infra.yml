@@ -24,6 +24,18 @@ stages:
         deploy:
           steps:
           - download: current
+          - task: Bash@3
+            displayName: 'Pre-Commit Linting'
+            continueOnError: true
+            inputs:
+              targetType: 'inline'
+              script: |
+                set -eou pipefail
+                trap exit 1 ERR
+                python -m pip install pre-commit
+                pre-commit install
+                SKIP=isort,yapf,black,flake8,bandit pre-commit run --all-files
+              workingDirectory: 'application'
           - task: AzureCLI@2
             displayName: Deploy
             inputs:
