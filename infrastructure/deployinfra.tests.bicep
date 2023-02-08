@@ -1,6 +1,7 @@
 module test_required_params 'deployinfra.bicep' = {
   name: 'test_required_params'
   params: {
+    location: 'UkSouth'
     environment: 'Test'
     storageAccountName: 'stracttest'
     storageAccountSku: 'Standard_LRS'
