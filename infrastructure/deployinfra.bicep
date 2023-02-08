@@ -37,7 +37,7 @@ param webAppName string
 @description('This is the Web App Software version')
 param webAppLinuxFxVersion string
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
   location: location
   tags: tags
@@ -54,6 +54,24 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
     name: storageAccountSku
   }
   kind: 'StorageV2'
+}
+
+resource symbolicname 'Microsoft.Storage/storageAccounts/blobServices@2022-05-01' = {
+  name: 'default'
+  parent: storageAccount
+  properties: {
+    containerDeleteRetentionPolicy: {
+      allowPermanentDelete: true
+      days: 7
+      enabled: true
+    }
+    deleteRetentionPolicy: {
+      allowPermanentDelete: true
+      days: 7
+      enabled: true
+    }
+    isVersioningEnabled: true
+  }
 }
 
 resource storageAccountTableService 'Microsoft.Storage/storageAccounts/tableServices@2022-05-01' = {
