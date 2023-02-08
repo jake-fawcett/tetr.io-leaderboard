@@ -2,6 +2,7 @@ variables:
 # General
   buildAgents: 'LocalPool'
   environment: dev
+  tags: "{environment: ${{ variables.environment }}}"
   templateFile: deployinfra.bicep
   serviceConnection: tetris-sc-${{ variables.environment }}
   resourceGroup: platform-tetris-${{ variables.environment }}
@@ -12,6 +13,7 @@ variables:
   storageAccountTier: Hot
   webAppServerName: platform-tetris-webapp-server-${{ variables.environment }}
   webAppServerKind: linux
+  webAppServerTier: Basic
   webAppServerSku: B1
   webAppServerSkuCapacity: 1
   webAppName: platform-tetris-webapp-${{ variables.environment }}
