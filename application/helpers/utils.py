@@ -6,7 +6,7 @@ from azure.mgmt.storage import StorageManagementClient
 from multielo import MultiElo
 
 
-SUBSCRIPTION_ID = "2293b5f9-5144-48c3-9e63-605f45ecbc1e"
+SUBSCRIPTION_ID = "a33b898e-c78f-4532-a747-0598abda68a7"
 GROUP_NAME = "platform-tetris-dev"
 STORAGE_ACCOUNT_NAME = "stractdev"
 
