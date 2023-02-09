@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, url_for, redirect
-from helpers.utils import get_leaderboard_data, calc_mmr
-
+from flask import Flask, redirect, render_template, request, url_for
+from helpers.utils import calc_mmr, get_leaderboard_data
 
 app = Flask(__name__)
 
@@ -24,7 +23,7 @@ def submitPlayers():
     if request.method == "POST":
         try:
             num_players = int(next(request.form.items())[1])
-            return redirect(url_for('submitResults', num_players=num_players))
+            return redirect(url_for("submitResults", num_players=num_players))
         except Exception as e:
             print(e)
             return render_template("submit.html", buttonStatus="Unsuccessful - please enter a valid input.")
@@ -34,12 +33,12 @@ def submitPlayers():
 @app.route("/submit-results", methods=["GET", "POST"])
 def submitResults():
     print("Submit Results page request recieved")
-    num_players = int(request.args.get('num_players', None))
+    num_players = int(request.args.get("num_players", None))
     if request.method == "POST":
         usernames = list(request.form.values())
-        if '' in usernames:
+        if "" in usernames:
             return render_template("submit-results.html", num_players=num_players, buttonStatus="Unsuccessful - please enter a valid input.")
-        result_string = "New MMRs \n" + '\n'.join([user["User"] + ": " + user["MMR"] + "," for user in calc_mmr(usernames)])
+        result_string = "New MMRs \n" + "\n".join([user["User"] + ": " + user["MMR"] + "," for user in calc_mmr(usernames)])
         return render_template("submit-results.html", num_players=num_players, buttonStatus=result_string)
     return render_template("submit-results.html", num_players=num_players, buttonStatus="")
 

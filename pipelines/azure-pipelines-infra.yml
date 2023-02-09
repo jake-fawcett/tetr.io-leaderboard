@@ -24,6 +24,18 @@ stages:
         deploy:
           steps:
           - download: current
+          - task: Bash@3
+            displayName: 'Pre-Commit Linting'
+            continueOnError: true
+            inputs:
+              targetType: 'inline'
+              script: |
+                set -eou pipefail
+                trap exit 1 ERR
+                python -m pip install pre-commit
+                pre-commit install
+                SKIP=isort,yapf,black,flake8,bandit pre-commit run --all-files
+              workingDirectory: 'application'
           - task: AzureCLI@2
             displayName: Deploy
             inputs:
@@ -39,10 +51,10 @@ stages:
                 az deployment group create --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }} \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                     webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
-                    webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} --only-show-errors
+                    webAppServerTier=${{ variables.webAppServerTier }} webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} environment=${{ variables.environment }} --only-show-errors
 
                 storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id --out tsv)
                 echo $storageId
                 # Bicep seems to ignores the identity parameter, so using the cli
-                az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Storage Blob Data Contributor' --scope $storageId
+                az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Contributor' --scope $storageId
               workingDirectory: 'infrastructure'

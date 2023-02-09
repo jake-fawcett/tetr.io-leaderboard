@@ -5,7 +5,6 @@ from azure.identity import DefaultAzureCredential
 from azure.mgmt.storage import StorageManagementClient
 from multielo import MultiElo
 
-
 SUBSCRIPTION_ID = "a33b898e-c78f-4532-a747-0598abda68a7"
 GROUP_NAME = "platform-tetris-dev"
 STORAGE_ACCOUNT_NAME = "stractdev"
@@ -22,6 +21,7 @@ def get_table_client():
     )
     return table_client
 
+
 def get_leaderboard_data():
     table_client = get_table_client()
     my_filter = "PartitionKey eq 'Users'"
@@ -35,11 +35,12 @@ def get_leaderboard_data():
     tables = sort.to_html(classes="leaderboard", header="true", index=False)
     return tables
 
+
 def get_or_create_users(table_client, usernames):
-    users=[]
+    users = []
     for username in usernames:
         try:
-            entity={"PartitionKey": "Users", "RowKey": username.lower(),"User": username, "MMR": "1000"}
+            entity = {"PartitionKey": "Users", "RowKey": username.lower(), "User": username, "MMR": "1000"}
             table_client.create_entity(entity)
             users.append(entity)
         except ResourceExistsError:
@@ -48,11 +49,11 @@ def get_or_create_users(table_client, usernames):
             users.append(entity)
     return users
 
+
 def update_users(table_client, users):
     for user in users:
-        table_client.update_entity(
-            mode=UpdateMode.MERGE, entity=user
-        )
+        table_client.update_entity(mode=UpdateMode.MERGE, entity=user)
+
 
 def calc_mmr(usernames):
     table_client = get_table_client()

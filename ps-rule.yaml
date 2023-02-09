@@ -1,0 +1,17 @@
+execution:
+  notProcessedWarning: false
+
+configuration:
+  # Enable expansion of Azure Bicep files.
+  AZURE_BICEP_FILE_EXPANSION: true
+  # Configure the timeout for bicep build to 15 seconds.
+  AZURE_BICEP_FILE_EXPANSION_TIMEOUT: 15
+
+rule:
+  exclude:
+    - Azure.Storage.UseReplication
+    - Azure.AppService.PlanInstanceCount
+    - Azure.AppService.MinPlan
+    - Azure.AppService.AlwaysOn
+    - Azure.AppService.WebProbe
+    - Azure.AppService.WebProbePath
