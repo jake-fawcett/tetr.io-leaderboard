@@ -56,5 +56,5 @@ stages:
                 storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id --out tsv)
                 echo $storageId
                 # Bicep seems to ignores the identity parameter, so using the cli
-                az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Storage Blob Data Contributor' --scope $storageId
+                az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Contributor' --scope $storageId
               workingDirectory: 'infrastructure'
