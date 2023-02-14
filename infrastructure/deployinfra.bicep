@@ -1,10 +1,10 @@
 @description('This is the resource location')
 param location string = resourceGroup().location
 
-@description('This is the resource location')
+@description('This is environment')
 param environment string
 
-@description('This is the resource location')
+@description('This is the resource tags')
 param tags object  = {environment: environment}
 
 @description('This is the Storage Account name')
