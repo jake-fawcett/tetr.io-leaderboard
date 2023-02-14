@@ -56,7 +56,8 @@ stages:
               deploymentMode: Validation
               resourceGroupName: ${{ variables.resourceGroup }}
               csmFile: infrastructure/${{ variables.templateFile }}
-              overrideParameters: >-
+              overrideParameters: >- 
+                'tags=${{ variables.tags }}
                 storageAccountName=${{ variables.storageAccountName }} 
                 storageAccountSku=${{ variables.storageAccountSku }} 
                 storageAccountTier=${{ variables.storageAccountTier }}
@@ -64,8 +65,7 @@ stages:
                 webAppServerKind=${{ variables.webAppServerKind }} 
                 webAppServerSku=${{ variables.webAppServerSku }} 
                 webAppName=${{ variables.webAppName }} 
-                webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} 
-                tags=${{ variables.tags }}
+                webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }}'
           - task: AzureCLI@2
             displayName: What-if
             inputs:
