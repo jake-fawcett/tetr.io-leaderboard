@@ -1,5 +1,6 @@
 variables:
 # General
+  location: 'uksouth'
   buildAgents: 'LocalPool'
   environment: 'dev'
   tags: '{"environment": "dev"}'
