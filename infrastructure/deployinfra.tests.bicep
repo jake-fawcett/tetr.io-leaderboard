@@ -2,7 +2,7 @@ module test_required_params 'deployinfra.bicep' = {
   name: 'test_required_params'
   params: {
     location: 'UkSouth'
-    tags: {environment: 'TEST'}
+    tags: {"environment": "TEST"}
     storageAccountName: 'stracttest'
     webAppServerName: 'platform-tetris-webapp-server-test'
     webAppServerKind: 'linux'
