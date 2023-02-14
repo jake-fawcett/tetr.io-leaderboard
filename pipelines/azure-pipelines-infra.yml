@@ -58,8 +58,7 @@ stages:
           #     resourceGroupName: ${{ variables.resourceGroup }}
           #     csmFile: infrastructure/${{ variables.templateFile }}
           #     overrideParameters: >- 
-          #       '-tags ${{ variables.tags }}
-          #       -storageAccountName ${{ variables.storageAccountName }} 
+          #       '-storageAccountName ${{ variables.storageAccountName }} 
           #       -storageAccountSku ${{ variables.storageAccountSku }} 
           #       -storageAccountTier ${{ variables.storageAccountTier }}
           #       -webAppServerName ${{ variables.webAppServerName }} 
@@ -79,7 +78,7 @@ stages:
                 az deployment group what-if --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }} \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                     webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
-                    webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} tags="${{ variables.tags }}"
+                    webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }}
               workingDirectory: 'infrastructure'
           - task: AzureCLI@2
             displayName: Cost Estimator
@@ -104,8 +103,7 @@ stages:
               resourceGroupName: ${{ variables.resourceGroup }}
               csmFile: infrastructure/${{ variables.templateFile }}
               overrideParameters: >-
-                '-tags ${{ variables.tags }}
-                -storageAccountName ${{ variables.storageAccountName }} 
+                '-storageAccountName ${{ variables.storageAccountName }} 
                 -storageAccountSku ${{ variables.storageAccountSku }} 
                 -storageAccountTier ${{ variables.storageAccountTier }}
                 -webAppServerName ${{ variables.webAppServerName }} 

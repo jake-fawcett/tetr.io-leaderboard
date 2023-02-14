@@ -3,7 +3,6 @@ variables:
   location: 'uksouth'
   buildAgents: 'LocalPool'
   environment: 'dev'
-  tags: '{"environment": "dev"}'
   templateFile: deployinfra.bicep
   serviceConnection: tetris-sc-${{ variables.environment }}
   resourceGroup: platform-tetris-${{ variables.environment }}

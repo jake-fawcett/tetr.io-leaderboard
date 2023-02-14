@@ -1,9 +1,6 @@
 @description('This is the resource location')
 param location string = resourceGroup().location
 
-@description('This is the resource tags')
-param tags object
-
 @description('This is the Storage Account name')
 param storageAccountName string
 
@@ -31,7 +28,6 @@ param webAppLinuxFxVersion string
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
   location: location
-  tags: tags
   properties: {
     accessTier: storageAccountTier
     supportsHttpsTrafficOnly: true
@@ -80,7 +76,6 @@ resource usersTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2022
 resource webAppServer 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: webAppServerName
   location: location
-  tags: tags
   kind: webAppServerKind
   properties: {
     reserved: true
@@ -95,7 +90,6 @@ resource webAppServer 'Microsoft.Web/serverfarms@2022-03-01' = {
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: webAppName
   location: location
-  tags: tags
   properties: {
     serverFarmId: webAppServer.id
     clientAffinityEnabled: false
