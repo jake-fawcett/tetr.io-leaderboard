@@ -6,6 +6,7 @@ variables:
   templateFile: deployinfra.bicep
   serviceConnection: tetris-sc-${{ variables.environment }}
   resourceGroup: platform-tetris-${{ variables.environment }}
+  artifactName: 'drop'
 
 # Infra
   storageAccountName: stract${{ variables.environment }}

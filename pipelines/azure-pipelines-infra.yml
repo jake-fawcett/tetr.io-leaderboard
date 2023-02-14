@@ -14,7 +14,22 @@ variables:
   - template: vars-${{ parameters.environment }}.yml
 
 stages:
+- stage: Build
+  jobs:
+  - job: run_build
+    pool:
+      pool: ${{ variables.buildAgents }}
+    steps:
+    - task: CopyFiles@2
+      displayName: 'Copy files'
+      inputs:
+        contents: '**'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+    - publish: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Publish script'
+      artifact: ${{ variables.artifactName }}
 - stage: DeployInfra
+  dependsOn: Build
   jobs:     
   - deployment: Infra
     environment: ${{ variables.environment }}
@@ -34,7 +49,7 @@ stages:
                 python -m pip install pre-commit
                 pre-commit install
                 SKIP=isort,yapf,black,flake8,bandit pre-commit run --all-files
-              workingDirectory: 'application'
+              workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\application'
           - task: AzureCLI@2
             displayName: Create Resource Group
             inputs:
@@ -55,7 +70,7 @@ stages:
           #     location: ${{ variables.location }}
           #     deploymentMode: Validation
           #     resourceGroupName: ${{ variables.resourceGroup }}
-          #     csmFile: infrastructure/${{ variables.templateFile }}
+          #     csmFile: $(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure/${{ variables.templateFile }}
           #     overrideParameters: >- 
           #       '-storageAccountName ${{ variables.storageAccountName }} 
           #       -storageAccountSku ${{ variables.storageAccountSku }} 
@@ -78,7 +93,7 @@ stages:
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                     webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
                     webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }}
-              workingDirectory: 'infrastructure'
+              workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure'
           - task: AzureCLI@2
             displayName: Cost Estimator
             inputs:
@@ -93,14 +108,14 @@ stages:
                 unzip -o arm-estimator-linux-x64-1.1.zip
                 echo "Cost Estimator - run"
                 ../arm-estimator-linux-x64-1.1/azure-cost-estimator ${{ variables.templateFile }} a33b898e-c78f-4532-a747-0598abda68a7 ${{ variables.resourceGroup }}
-              workingDirectory: 'infrastructure'
+              workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure'
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
               connectedServiceName: ${{ variables.serviceConnection }}
               location: ${{ variables.location }}
               deploymentMode: Incremental
               resourceGroupName: ${{ variables.resourceGroup }}
-              csmFile: infrastructure/${{ variables.templateFile }}
+              csmFile: $(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure/${{ variables.templateFile }}
               overrideParameters: >-
                 '-storageAccountName ${{ variables.storageAccountName }} 
                 -storageAccountSku ${{ variables.storageAccountSku }} 
