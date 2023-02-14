@@ -56,8 +56,8 @@ stages:
                     webAppServerTier=${{ variables.webAppServerTier }} webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} environment=${{ variables.environment }} 
 
                 echo "Cost Estimator"
-                wget https://github.com/TheCloudTheory/arm-estimator/releases/download/1.1/arm-estimator-linux-x64-1.1.zip >/dev/null
-                unzip arm-estimator-linux-x64-1.1.zip >/dev/null
+                wget https://github.com/TheCloudTheory/arm-estimator/releases/download/1.1/arm-estimator-linux-x64-1.1.zip > /dev/null
+                unzip arm-estimator-linux-x64-1.1.zip > /dev/null
                 ../arm-estimator-linux-x64-1.1/azure-cost-estimator ${{ variables.templateFile }} a33b898e-c78f-4532-a747-0598abda68a7 ${{ variables.resourceGroup }}
 
                 echo "Deploying Infra"
