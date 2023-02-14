@@ -37,7 +37,7 @@ stages:
                 SKIP=isort,yapf,black,flake8,bandit pre-commit run --all-files
               workingDirectory: 'application'
           - task: AzureCLI@2
-            displayName: Deploy
+            displayName: Create Resource Group
             inputs:
               azureSubscription: ${{ variables.serviceConnection }}
               failOnStandardError: true
@@ -48,28 +48,70 @@ stages:
                   echo "Creating Resource Group"
                   az group create --name ${{ variables.resourceGroup }} --location uksouth
                 fi
-
+              workingDirectory: '.'
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              connectedServiceName: ${{ variables.serviceConnection }}
+              location: ${{ variables.location }}
+              deploymentMode: Validation
+              resourceGroupName: ${{ variables.resourceGroup }}
+              csmFile: infrastructure/${{ variables.templateFile }}
+          - task: AzureCLI@2
+            displayName: What-if
+            inputs:
+              azureSubscription: ${{ variables.serviceConnection }}
+              failOnStandardError: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
                 echo "Running What If"
                 az deployment group what-if --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }} \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                     webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
                     webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} tags=${{ variables.tags }} 
-
+              workingDirectory: 'infrastructure'
+          - task: AzureCLI@2
+            displayName: Cost Estimator
+            inputs:
+              azureSubscription: ${{ variables.serviceConnection }}
+              failOnStandardError: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
                 echo "Cost Estimator - wget"
                 wget -q https://github.com/TheCloudTheory/arm-estimator/releases/download/1.1/arm-estimator-linux-x64-1.1.zip
                 echo "Cost Estimator - unzip"
                 unzip arm-estimator-linux-x64-1.1.zip
                 echo "Cost Estimator - run"
                 ../arm-estimator-linux-x64-1.1/azure-cost-estimator ${{ variables.templateFile }} a33b898e-c78f-4532-a747-0598abda68a7 ${{ variables.resourceGroup }}
-
-                echo "Deploying Infra"
-                az deployment group create --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }} \
-                  --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
-                    webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
-                    webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} tags=${{ variables.tags }} --only-show-errors
-
-                 echo "Setting WebApp Identity Storage Account Permissions"
+              workingDirectory: 'infrastructure'
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              connectedServiceName: ${{ variables.serviceConnection }}
+              location: ${{ variables.location }}
+              deploymentMode: Incremental
+              resourceGroupName: ${{ variables.resourceGroup }}
+              csmFile: infrastructure/${{ variables.templateFile }}
+              overrideParameters: >-
+                storageAccountName=${{ variables.storageAccountName }} 
+                storageAccountSku=${{ variables.storageAccountSku }} 
+                storageAccountTier=${{ variables.storageAccountTier }}
+                webAppServerName=${{ variables.webAppServerName }} 
+                webAppServerKind=${{ variables.webAppServerKind }} 
+                webAppServerSku=${{ variables.webAppServerSku }} 
+                webAppName=${{ variables.webAppName }} 
+                webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} 
+                tags=${{ variables.tags }}
+          - task: AzureCLI@2
+            displayName: WebApp Identity Storage Account Permissions
+            inputs:
+              azureSubscription: ${{ variables.serviceConnection }}
+              failOnStandardError: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                echo "Setting WebApp Identity Storage Account Permissions"
                 storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id --out tsv)
                 # Bicep seems to ignores the identity parameter, so using the cli
                 az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Contributor' --scope $storageId
-              workingDirectory: 'infrastructure'
+              workingDirectory: '.'
