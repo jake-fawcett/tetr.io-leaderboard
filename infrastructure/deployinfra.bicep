@@ -23,13 +23,7 @@ param webAppServerName string
 param webAppServerKind string
 
 @description('This is the Web App Server sku')
-param webAppServerTier string = 'Basic'
-
-@description('This is the Web App Server sku')
 param webAppServerSku string
-
-@description('This is the Web App Server capacity')
-param webAppServerSkuCapacity int = 1
 
 @description('This is the Web App name')
 param webAppName string
@@ -96,8 +90,8 @@ resource webAppServer 'Microsoft.Web/serverfarms@2022-03-01' = {
   }
   sku: {
     name: webAppServerSku
-    tier: webAppServerTier
-    capacity: webAppServerSkuCapacity
+    tier: 'Basic'
+    capacity: 1
   }
 }
 
