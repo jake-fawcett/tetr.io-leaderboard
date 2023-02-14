@@ -45,16 +45,29 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 if [[ $(az group exists -g ${{ variables.resourceGroup }}) == false ]]; then
+                  echo "Creating Resource Group"
                   az group create --name ${{ variables.resourceGroup }} --location uksouth
                 fi
 
+                echo "Running What If"
+                az deployment group what-if --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }} \
+                  --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
+                    webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
+                    webAppServerTier=${{ variables.webAppServerTier }} webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} environment=${{ variables.environment }} 
+
+                echo "Cost Estimator"
+                wget https://github.com/TheCloudTheory/arm-estimator/releases/download/1.1/arm-estimator-linux-x64-1.1.zip
+                unzip arm-estimator-linux-x64-1.1.zip
+                ../arm-estimator-linux-x64-1.1/azure-cost-estimator ${{ variables.templateFile }} a33b898e-c78f-4532-a747-0598abda68a7 ${{ variables.resourceGroup }}
+
+                echo "Deploying Infra"
                 az deployment group create --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }} \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                     webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} webAppServerSkuCapacity=${{ variables.webAppServerSkuCapacity }} \
                     webAppServerTier=${{ variables.webAppServerTier }} webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }} environment=${{ variables.environment }} --only-show-errors
 
+                 echo "Setting WebApp Identity Storage Account Permissions"
                 storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id --out tsv)
-                echo $storageId
                 # Bicep seems to ignores the identity parameter, so using the cli
                 az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Contributor' --scope $storageId
               workingDirectory: 'infrastructure'
