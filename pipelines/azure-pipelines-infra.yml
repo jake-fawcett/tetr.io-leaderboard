@@ -16,9 +16,8 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - job: run_build
-    pool:
-      pool: ${{ variables.buildAgents }}
+  - job: Build
+    pool: ${{ variables.buildAgents }}
     steps:
     - task: CopyFiles@2
       displayName: 'Copy files'
@@ -38,6 +37,8 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: ${{ variables.artifactName }}
           - task: Bash@3
             displayName: 'Pre-Commit Linting'
             continueOnError: true
