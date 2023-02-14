@@ -23,7 +23,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          - download: current
           - task: Bash@3
             displayName: 'Pre-Commit Linting'
             continueOnError: true
