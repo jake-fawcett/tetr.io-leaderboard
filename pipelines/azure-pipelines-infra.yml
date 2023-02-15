@@ -110,8 +110,10 @@ stages:
                 wget -q https://github.com/TheCloudTheory/arm-estimator/releases/download/1.1/arm-estimator-linux-x64-1.1.zip
                 echo "Cost Estimator - unzip"
                 unzip -o arm-estimator-linux-x64-1.1.zip
+                echo "ls"
+                ls
                 echo "Cost Estimator - run"
-                sudo ./azure-cost-estimator ${{ variables.templateFile }} a33b898e-c78f-4532-a747-0598abda68a7 ${{ variables.resourceGroup }}
+                ./azure-cost-estimator ${{ variables.templateFile }} a33b898e-c78f-4532-a747-0598abda68a7 ${{ variables.resourceGroup }}
               workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure'
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
