@@ -112,10 +112,11 @@ stages:
                 wget -q https://github.com/TheCloudTheory/arm-estimator/releases/download/1.2-beta1/arm-estimator-linux-x64-1.2-beta1.zip
                 echo "Cost Estimator - unzip"
                 unzip -o arm-estimator-linux-x64-1.2-beta1.zip
-                chmod +x azure-cost-estimator
                 echo "Cost Estimator - run"
-                export COMPlus_EnableDiagnostics=0
-                ./azure-cost-estimator ${{ variables.templateFile }} ${{ variables.subscriptionId }} ${{ variables.resourceGroup }} --currency GBP
+                ./azure-cost-estimator ${{ variables.templateFile }} ${{ variables.subscriptionId }} ${{ variables.resourceGroup }} --currency GBP \
+                  --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
+                      webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
+                      webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }}
               workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure'
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
