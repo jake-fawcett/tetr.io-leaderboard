@@ -169,8 +169,8 @@ stages:
                 sudo apt-get update
                 sudo apt-get install azure-cli=2.44.1-1~jammy
 
+                # Bicep seems to ignores the identity parameter, so using the cli
                 echo "Setting WebApp Identity Storage Account Permissions"
                 storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id -otsv)
-                # Bicep seems to ignores the identity parameter, so using the cli
                 az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Contributor' --scope $storageId
               workingDirectory: '$(Pipeline.Workspace)'
