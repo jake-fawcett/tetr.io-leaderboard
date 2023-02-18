@@ -112,7 +112,7 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 echo "Cost Estimator - wget"
-                wget -q https://github.com/TheCloudTheory/arm-estimator/releases/download/1.2-beta1/arm-estimator-linux-x64-1.2-beta1.zip
+                wget -q https://github.com/TheCloudTheory/arm-estimator/releases/download/1.1/arm-estimator-linux-x64-1.1.zip
                 echo "Cost Estimator - unzip"
                 unzip arm-estimator-linux-x64-1.2-beta1.zip
                 echo "Cost Estimator - run"
