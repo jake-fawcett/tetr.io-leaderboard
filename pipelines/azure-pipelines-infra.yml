@@ -160,7 +160,7 @@ stages:
                 # Downgrade CLI to 2.44.1 due to breaking change to az webapp
                 pip install azure-cli==2.44.1
                 echo "Setting WebApp Identity Storage Account Permissions"
-                storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id --o tsv)
+                storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id -otsv)
                 # Bicep seems to ignores the identity parameter, so using the cli
                 az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Contributor' --scope $storageId
               workingDirectory: '$(Pipeline.Workspace)'
