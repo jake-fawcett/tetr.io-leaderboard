@@ -114,6 +114,7 @@ stages:
                 unzip -o arm-estimator-linux-x64-1.2-beta1.zip
                 chmod +x azure-cost-estimator
                 echo "Cost Estimator - run"
+                export COMPlus_EnableDiagnostics=0
                 ./azure-cost-estimator ${{ variables.templateFile }} ${{ variables.subscriptionId }} ${{ variables.resourceGroup }} --currency GBP
               workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure'
           - task: AzureResourceManagerTemplateDeployment@3
