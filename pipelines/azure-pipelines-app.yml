@@ -16,7 +16,8 @@ variables:
 stages:
 - stage: LintBuildDeploy
   displayName: Build
-  pool: ${{ variables.buildAgents }}
+  pool:
+    vmImage: 'ubuntu-latest'
   jobs:
   - job: PreCommitLinting
     displayName: Pre-Commit Linting
@@ -49,7 +50,8 @@ stages:
     displayName: Deploy App
     dependsOn: Build
     environment: ${{ variables.environment }}
-    pool: ${{ variables.buildAgents }}
+    pool:
+      vmImage: 'ubuntu-latest'
     strategy:
       runOnce:
         deploy:
