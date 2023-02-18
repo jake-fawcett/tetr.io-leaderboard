@@ -116,6 +116,7 @@ stages:
                 echo "Cost Estimator - unzip"
                 unzip arm-estimator-linux-x64-1.1.zip
                 echo "Cost Estimator - run"
+                export TMPDIR=/tmp
                 chmod +x ./azure-cost-estimator
                 ./azure-cost-estimator ${{ variables.templateFile }} ${{ variables.subscriptionId }} ${{ variables.resourceGroup }} --currency GBP \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
