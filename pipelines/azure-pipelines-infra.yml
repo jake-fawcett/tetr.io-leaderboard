@@ -113,6 +113,8 @@ stages:
                 echo "Cost Estimator - unzip"
                 unzip -o arm-estimator-linux-x64-1.1.zip
                 echo "Cost Estimator - run"
+                export COMPlus_EnableDiagnostics=0 # Turn off debugging as it fails due to lack of sudo perms
+                export COMPlus_EnableWriteXorExecute=0
                 chmod +x azure-cost-estimator
                 ./azure-cost-estimator ${{ variables.templateFile }} a33b898e-c78f-4532-a747-0598abda68a7 ${{ variables.resourceGroup }} --currency GBP
               workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure'
