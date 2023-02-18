@@ -12,12 +12,12 @@ variables:
 
 # Infra
   storageAccountName: stract${{ variables.environment }}
-  storageAccountSku: 'Standard_LRS'
-  storageAccountTier: 'Hot'
+  storageAccountSku: Standard_LRS
+  storageAccountTier: Hot
   webAppServerName: platform-tetris-webapp-server-${{ variables.environment }}
-  webAppServerKind: 'linux'
-  webAppServerTier: 'Basic'
-  webAppServerSku: 'B1'
+  webAppServerKind: linux
+  webAppServerTier: Basic
+  webAppServerSku: B1
   webAppServerSkuCapacity: 1
   webAppName: platform-tetris-webapp-${{ variables.environment }}
   webAppLinuxFxVersion: "'PYTHON|3.9'"
