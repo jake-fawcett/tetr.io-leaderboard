@@ -79,7 +79,7 @@ stages:
           #     location: ${{ variables.location }}
           #     deploymentMode: Validation
           #     resourceGroupName: ${{ variables.resourceGroup }}
-          #     csmFile: $(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure/${{ variables.templateFile }}
+          #     csmFile: $(Pipeline.Workspace)/${{ variables.artifactName }}/infrastructure/${{ variables.templateFile }}
           #     overrideParameters: >- 
           #       '-storageAccountName ${{ variables.storageAccountName }} 
           #       -storageAccountSku ${{ variables.storageAccountSku }} 
@@ -102,7 +102,7 @@ stages:
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                     webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
                     webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }}
-              workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure'
+              workingDirectory: '$(Pipeline.Workspace)/${{ variables.artifactName }}/infrastructure'
           - task: UseDotNet@2
           - task: AzureCLI@2
             displayName: Cost Estimator
@@ -123,14 +123,14 @@ stages:
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                       webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
                       webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }}
-              workingDirectory: '$(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure'
+              workingDirectory: '$(Pipeline.Workspace)/${{ variables.artifactName }}/infrastructure'
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
               connectedServiceName: ${{ variables.serviceConnection }}
               location: ${{ variables.location }}
               deploymentMode: Incremental
               resourceGroupName: ${{ variables.resourceGroup }}
-              csmFile: $(Pipeline.Workspace)\${{ variables.artifactName }}\infrastructure/${{ variables.templateFile }}
+              csmFile: $(Pipeline.Workspace)/${{ variables.artifactName }}/infrastructure/${{ variables.templateFile }}
               overrideParameters: >-
                 '-storageAccountName ${{ variables.storageAccountName }} 
                 -storageAccountSku ${{ variables.storageAccountSku }} 
