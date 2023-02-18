@@ -116,6 +116,8 @@ stages:
                 echo "Cost Estimator - unzip"
                 unzip arm-estimator-linux-x64-1.2-beta1.zip
                 echo "Cost Estimator - run"
+                chmod u+x azure-cost-estimator
+                export COMPlus_EnableDiagnostics=0
                 ./azure-cost-estimator ${{ variables.templateFile }} ${{ variables.subscriptionId }} ${{ variables.resourceGroup }} --currency GBP \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                       webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
