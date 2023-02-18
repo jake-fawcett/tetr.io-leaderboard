@@ -28,7 +28,7 @@ stages:
         script: |
           python -m pip install pre-commit
           pre-commit install
-          pre-commit run arm-bicep-psrule-linting
+          pre-commit run arm-bicep-psrule-linting --all-files
         workingDirectory: 'application'
     - task: Bash@3
       displayName: 'Pre-Commit Linting'
