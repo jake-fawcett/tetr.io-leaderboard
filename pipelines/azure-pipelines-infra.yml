@@ -117,9 +117,9 @@ stages:
                 echo "Cost Estimator - run"
                 chmod +x ./azure-cost-estimator
                 ./azure-cost-estimator ${{ variables.templateFile }} ${{ variables.subscriptionId }} ${{ variables.resourceGroup }} --currency GBP \
-                  --inline storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
-                      webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
-                      webAppName=${{ variables.webAppName }} webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }}
+                  --inline storageAccountName=${{ variables.storageAccountName }} --inline storageAccountSku=${{ variables.storageAccountSku }} --inline storageAccountTier=${{ variables.storageAccountTier }} \
+                  --inline webAppServerName=${{ variables.webAppServerName }} --inline webAppServerKind=${{ variables.webAppServerKind }} --inline webAppServerSku=${{ variables.webAppServerSku }} \
+                  --inline webAppName=${{ variables.webAppName }} --inline webAppLinuxFxVersion=${{ variables.webAppLinuxFxVersion }}
               workingDirectory: '$(Pipeline.Workspace)/${{ variables.artifactName }}/infrastructure'
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
