@@ -1,5 +1,7 @@
 variables:
 # General
+  tenantId: '494fdacd-c12c-4c24-a407-e02b88c3bb30'
+  subscriptionId: 'a33b898e-c78f-4532-a747-0598abda68a7'
   location: 'uksouth'
   buildAgents: 'LocalPool'
   environment: 'dev'
