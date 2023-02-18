@@ -155,7 +155,7 @@ stages:
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
-                # Downgrade CLI to 2.44.1 due to breaking change to az webapp
+                # Downgrade CLI to 2.42.0 due to breaking change to az webapp
                 sudo apt-get update
                 sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
                 sudo mkdir -p /etc/apt/keyrings
@@ -167,7 +167,7 @@ stages:
                 echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" |
                     sudo tee /etc/apt/sources.list.d/azure-cli.list
                 sudo apt-get update
-                sudo apt-get install azure-cli=2.44.1-1~jammy --allow-downgrades
+                sudo apt-get install azure-cli=2.42.0-1~jammy --allow-downgrades
 
                 # Bicep seems to ignores the identity parameter, so using the cli
                 echo "Setting WebApp Identity Storage Account Permissions"
