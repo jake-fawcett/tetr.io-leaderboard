@@ -26,8 +26,6 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          set -eou pipefail
-          trap exit 1 ERR
           python -m pip install pre-commit
           pre-commit install
           pre-commit run arm-bicep-psrule-linting
