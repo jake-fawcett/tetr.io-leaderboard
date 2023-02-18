@@ -117,8 +117,9 @@ stages:
                 unzip arm-estimator-linux-x64-1.1.zip
                 echo "Cost Estimator - run"
                 chmod u+x azure-cost-estimator
-                export COMPlus_EnableDiagnostics=0 # Turn off debugging as it fails due to lack of sudo perms
-                export COMPlus_EnableWriteXorExecute=0
+                echo ${{ variables.templateFile }}
+                echo ${{ variables.templateFile }}
+                echo ${{ variables.resourceGroup }}
                 ./azure-cost-estimator ${{ variables.templateFile }} ${{ variables.subscriptionId }} ${{ variables.resourceGroup }} --currency GBP \
                   --parameters storageAccountName=${{ variables.storageAccountName }} storageAccountSku=${{ variables.storageAccountSku }} storageAccountTier=${{ variables.storageAccountTier }} \
                       webAppServerName=${{ variables.webAppServerName }} webAppServerKind=${{ variables.webAppServerKind }} webAppServerSku=${{ variables.webAppServerSku }} \
