@@ -171,6 +171,9 @@ stages:
 
                 # Bicep seems to ignores the identity parameter, so using the cli
                 echo "Setting WebApp Identity Storage Account Permissions"
+                echo ${{ variables.storageAccountName }}
+                echo ${{ variables.resourceGroup }}
                 storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id -otsv)
+                echo $storageId
                 az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Contributor' --scope $storageId
               workingDirectory: '$(Pipeline.Workspace)'
