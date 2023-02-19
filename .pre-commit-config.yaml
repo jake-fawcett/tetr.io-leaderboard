@@ -49,5 +49,7 @@ repos:
   hooks:
     - id: azure-bicep-build
       verbose: true
+      exclude: infrastructure/bicep-modules
     - id: arm-bicep-psrule-linting
       verbose: true
+      exclude: infrastructure/bicep-modules
