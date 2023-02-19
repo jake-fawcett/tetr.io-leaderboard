@@ -32,6 +32,7 @@ module storageAccount 'bicep-modules/storage/storageAccount.bicep' = {
     storageAccountName: storageAccountName
     storageAccountSku: storageAccountSku
     storageAccountTier: storageAccountTier
+    storageAccountPublicAccess: 'Enabled' // To be removed when private networking implemented
   }
 }
 
@@ -76,6 +77,5 @@ module webapp 'bicep-modules/webapp/site.bicep' = {
     webAppServerName: webAppServerName
     webAppName: webAppName
     webAppLinuxFxVersion: webAppLinuxFxVersion
-    webAppPublicNetworkAccess: 'Enabled' // To be removed when private networking implemented
   }
 }
