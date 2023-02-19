@@ -77,5 +77,6 @@ module webapp 'bicep-modules/webapp/site.bicep' = {
     webAppServerName: webAppServerName
     webAppName: webAppName
     webAppLinuxFxVersion: webAppLinuxFxVersion
+    webAppPublicNetworkAccess: 'Enabled'
   }
 }
