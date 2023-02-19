@@ -35,15 +35,11 @@ module storageAccount 'bicep-modules/storage/storageAccount.bicep' = {
   }
 }
 
-module blobService 'bicep-modules/storage/blobService.bicep' = {
-  name: 'blobServiceDeploy'
-  params: {
-    storageAccountName: storageAccountName
-  }
-}
-
 module storageAccountTableService 'bicep-modules/storage/tableService.bicep' = {
   name: 'tableServiceDeploy'
+  dependsOn: [
+    storageAccount
+  ]
   params: {
     storageAccountName: storageAccountName
   }
@@ -51,6 +47,9 @@ module storageAccountTableService 'bicep-modules/storage/tableService.bicep' = {
 
 module usersTable 'bicep-modules/storage/table.bicep' = {
   name: 'tableDeploy'
+  dependsOn: [
+    storageAccountTableService
+  ]
   params: {
     storageAccountName: storageAccountName
     tableName: 'users'
@@ -69,6 +68,9 @@ module webappServer 'bicep-modules/webapp/serverFarm.bicep' = {
 
 module webapp 'bicep-modules/webapp/site.bicep' = {
   name: 'webappDeploy'
+  dependsOn: [
+    webappServer
+  ]
   params: {
     location: location
     webAppServerName: webAppServerName
