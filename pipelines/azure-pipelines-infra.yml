@@ -32,7 +32,7 @@ stages:
           pre-commit run arm-bicep-psrule-linting --all-files
         workingDirectory: '.'
     - task: Bash@3
-      displayName: 'Pre-Commit Linting'
+      displayName: 'Bicep Build Validation'
       continueOnError: true
       inputs:
         targetType: 'inline'
@@ -41,7 +41,7 @@ stages:
           trap exit 1 ERR
           python -m pip install pre-commit
           pre-commit install
-          SKIP=isort,yapf,black,flake8,bandit,arm-bicep-psrule-linting pre-commit run --all-files
+          pre-commit run azure-bicep-build --all-files
         workingDirectory: '.'
   - job: Build
     pool:
