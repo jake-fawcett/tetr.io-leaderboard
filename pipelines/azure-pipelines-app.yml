@@ -34,7 +34,7 @@ stages:
             pre-commit install
             SKIP=azure-bicep-build,arm-bicep-psrule-linting pre-commit run --all-files
           workingDirectory: 'application'
-  - job: Build
+  - job: BuildAndDeploy
     displayName: Build App Artifact
     dependsOn: PreCommitLinting
     steps:
@@ -46,22 +46,12 @@ stages:
           archiveType: zip
           archiveFile: 'Application$(Build.BuildId).zip'
           replaceExistingArchive: true
-  - deployment: Deploy
-    displayName: Deploy App
-    dependsOn: Build
-    environment: ${{ variables.environment }}
-    pool:
-      vmImage: 'ubuntu-latest'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: Deploy Webapp
-            inputs:
-              azureSubscription: ${{ variables.serviceConnection }}
-              appType: ${{ variables.webAppType }}
-              appName: ${{ variables.webAppName }}
-              package: 'Application$(Build.BuildId).zip'
-              runtimeStack: ${{ variables.runTimeStack }}
-              deploymentMethod: zipDeploy
+      - task: AzureWebApp@1
+        displayName: Deploy Webapp
+        inputs:
+          azureSubscription: ${{ variables.serviceConnection }}
+          appType: ${{ variables.webAppType }}
+          appName: ${{ variables.webAppName }}
+          package: 'Application$(Build.BuildId).zip'
+          runtimeStack: ${{ variables.runTimeStack }}
+          deploymentMethod: zipDeploy
