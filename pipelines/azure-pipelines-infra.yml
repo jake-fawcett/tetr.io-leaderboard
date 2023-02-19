@@ -17,9 +17,13 @@ stages:
 - stage: Build
   jobs:
   - job: Linting
-    pool:
-      vmImage: 'ubuntu-22.04'
+    # pool:
+    #   vmImage: 'ubuntu-22.04'
+    pool: LocalPool
     steps:
+    - checkout: self
+      submodules: true
+      persistCredentials : true
     - task: PowerShell@2
       displayName: 'PRRule Linting'
       continueOnError: true
@@ -44,8 +48,9 @@ stages:
           pre-commit run azure-bicep-build --all-files
         workingDirectory: '.'
   - job: Build
-    pool:
-      vmImage: 'ubuntu-22.04'
+    # pool:
+    #   vmImage: 'ubuntu-22.04'
+    pool: LocalPool
     steps:
     - checkout: self
       submodules: true
@@ -65,8 +70,9 @@ stages:
     workspace:
       clean: all
     environment: ${{ variables.environment }}
-    pool:
-      vmImage: 'ubuntu-22.04'
+    # pool:
+    #   vmImage: 'ubuntu-22.04'
+    pool: LocalPool
     strategy:
       runOnce:
         deploy:
