@@ -20,8 +20,8 @@ variables:
   webAppServerSku: B1
   webAppServerSkuCapacity: 1
   webAppName: platform-tetris-webapp-${{ variables.environment }}
-  webAppLinuxFxVersion: "'PYTHON|3.9'"
+  webAppLinuxFxVersion: '"PYTHON|3.9"'
 
 # App
-  webAppType: 'webAppLinux'
-  runTimeStack: 'PYTHON|3.9'
+  webAppType: "webAppLinux"
+  runTimeStack: "PYTHON|3.9"
