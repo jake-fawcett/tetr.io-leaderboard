@@ -25,89 +25,54 @@ param webAppName string
 @description('This is the Web App Software version')
 param webAppLinuxFxVersion string
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
-  name: storageAccountName
-  location: location
-  properties: {
-    accessTier: storageAccountTier
-    supportsHttpsTrafficOnly: true
-    minimumTlsVersion: 'TLS1_2'
-    networkAcls: {
-      bypass: 'Logging, Metrics, AzureServices'
-      defaultAction: 'Deny'
-    }
-  }
-  sku: {
-    name: storageAccountSku
-  }
-  kind: 'StorageV2'
-}
-
-resource symbolicname 'Microsoft.Storage/storageAccounts/blobServices@2022-05-01' = {
-  name: 'default'
-  parent: storageAccount
-  properties: {
-    containerDeleteRetentionPolicy: {
-      allowPermanentDelete: true
-      days: 7
-      enabled: true
-    }
-    deleteRetentionPolicy: {
-      allowPermanentDelete: true
-      days: 7
-      enabled: true
-    }
-    isVersioningEnabled: true
+module storageAccount 'bicep-modules/storage/storageAccount.bicep' = {
+  name: 'storageAccountDeploy'
+  params: {
+    location: location
+    storageAccountName: storageAccountName
+    storageAccountSku: storageAccountSku
+    storageAccountTier: storageAccountTier
   }
 }
 
-resource storageAccountTableService 'Microsoft.Storage/storageAccounts/tableServices@2022-05-01' = {
-  name: 'default'
-  parent: storageAccount
-  properties: {}
-}
-
-resource usersTable 'Microsoft.Storage/storageAccounts/tableServices/tables@2022-05-01' = {
-  name: 'users'
-  parent: storageAccountTableService
-  properties: {}
-}
-
-resource webAppServer 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: webAppServerName
-  location: location
-  kind: webAppServerKind
-  properties: {
-    reserved: true
-  }
-  sku: {
-    name: webAppServerSku
-    tier: 'Basic'
-    capacity: 1
+module blobService 'bicep-modules/storage/blobService.bicep' = {
+  name: 'blobServiceDeploy'
+  params: {
+    storageAccountName: storageAccountName
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: webAppName
-  location: location
-  properties: {
-    serverFarmId: webAppServer.id
-    clientAffinityEnabled: false
-    httpsOnly: true
-    siteConfig: {
-      linuxFxVersion: webAppLinuxFxVersion
-      minTlsVersion: '1.2'
-      http20Enabled: true
-      ftpsState: 'FtpsOnly'
-      appSettings: [
-        {
-          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
-          value: 'True'
-        }
-      ]
-    }
+module storageAccountTableService 'bicep-modules/storage/tableService.bicep' = {
+  name: 'tableServiceDeploy'
+  params: {
+    storageAccountName: storageAccountName
   }
-  identity: {
-    type: 'SystemAssigned'
+}
+
+module usersTable 'bicep-modules/storage/table.bicep' = {
+  name: 'tableDeploy'
+  params: {
+    storageAccountName: storageAccountName
+    tableName: 'users'
+  }
+}
+
+module webappServer 'bicep-modules/webApp/serverFarm.bicep' = {
+  name: 'serverFarmDeploy'
+  params: {
+    location: location
+    webAppServerName: webAppServerName
+    webAppServerKind: webAppServerKind
+    webAppServerSku: webAppServerSku
+  }
+}
+
+module webapp 'bicep-modules/webApp/site.bicep' = {
+  name: 'webappDeploy'
+  params: {
+    location: location
+    webAppServerName: webAppServerName
+    webAppName: webAppName
+    webAppLinuxFxVersion: webAppLinuxFxVersion
   }
 }
