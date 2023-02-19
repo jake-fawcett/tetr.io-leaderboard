@@ -1,11 +1,14 @@
 variables:
 # General
+  tenantId: '494fdacd-c12c-4c24-a407-e02b88c3bb30'
+  subscriptionId: 'a33b898e-c78f-4532-a747-0598abda68a7'
+  location: 'uksouth'
   buildAgents: 'LocalPool'
-  environment: dev
-  tags: "{environment: ${{ variables.environment }}}"
+  environment: 'dev'
   templateFile: deployinfra.bicep
   serviceConnection: tetris-sc-${{ variables.environment }}
   resourceGroup: platform-tetris-${{ variables.environment }}
+  artifactName: 'drop'
 
 # Infra
   storageAccountName: stract${{ variables.environment }}
@@ -20,5 +23,5 @@ variables:
   webAppLinuxFxVersion: "'PYTHON|3.9'"
 
 # App
-  webAppType: webAppLinux
-  runTimeStack: PYTHON|3.9
+  webAppType: 'webAppLinux'
+  runTimeStack: 'PYTHON|3.9'
