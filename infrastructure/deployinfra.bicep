@@ -33,6 +33,7 @@ module storageAccount 'bicep-modules/storage/storageAccount.bicep' = {
     storageAccountSku: storageAccountSku
     storageAccountTier: storageAccountTier
     storageAccountPublicAccess: 'Enabled' // To be removed when private networking implemented
+    storageAccountDefaultNetworkAcl: 'Allow' // To be removed when private networking implemented
   }
 }
 
