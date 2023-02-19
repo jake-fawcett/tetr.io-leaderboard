@@ -57,7 +57,7 @@ module usersTable 'bicep-modules/storage/table.bicep' = {
   }
 }
 
-module webappServer 'bicep-modules/webApp/serverFarm.bicep' = {
+module webappServer 'bicep-modules/webapp/serverFarm.bicep' = {
   name: 'serverFarmDeploy'
   params: {
     location: location
@@ -67,7 +67,7 @@ module webappServer 'bicep-modules/webApp/serverFarm.bicep' = {
   }
 }
 
-module webapp 'bicep-modules/webApp/site.bicep' = {
+module webapp 'bicep-modules/webapp/site.bicep' = {
   name: 'webappDeploy'
   params: {
     location: location
