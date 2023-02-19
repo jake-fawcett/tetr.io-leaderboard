@@ -47,6 +47,9 @@ stages:
     pool:
       vmImage: 'ubuntu-22.04'
     steps:
+    - checkout: self
+      submodules: true
+      persistCredentials : true
     - task: CopyFiles@2
       displayName: 'Copy files'
       inputs:
