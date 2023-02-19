@@ -16,8 +16,7 @@ variables:
 stages:
 - stage: LintBuildDeploy
   displayName: Build
-  pool:
-    vmImage: 'ubuntu-latest'
+  pool: LocalPool
   jobs:
   - job: PreCommitLinting
     displayName: Pre-Commit Linting
