@@ -26,7 +26,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Install-Module -Name 'PSRule' -Repository PSGallery -Scope CurrentUser
+          Install-Module -Name PSRule -Scope CurrentUser -Force;
           python -m pip install pre-commit
           pre-commit install
           pre-commit run arm-bicep-psrule-linting --all-files
