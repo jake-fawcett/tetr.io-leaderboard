@@ -24,4 +24,4 @@ variables:
 
 # App
   webAppType: 'webAppLinux'
-  runTimeStack: 'PYTHON|3.9'
+  runTimeStack: "'PYTHON|3.9'"
