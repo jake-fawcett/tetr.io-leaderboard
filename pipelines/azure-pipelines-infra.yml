@@ -149,7 +149,7 @@ stages:
                 -webAppName ${{ variables.webAppName }} 
                 -webAppLinuxFxVersion ${{ variables.webAppLinuxFxVersion }}
           - task: AzureCLI@2
-            displayName: WebApp Identity Storage Account Permissions
+            displayName: Downgrade Azure CLI
             inputs:
               azureSubscription: ${{ variables.serviceConnection }}
               failOnStandardError: true
@@ -169,10 +169,16 @@ stages:
                     sudo tee /etc/apt/sources.list.d/azure-cli.list
                 sudo apt-get update
                 sudo apt-get install azure-cli=2.44.1-1~jammy --allow-downgrades
-
+          - task: AzureCLI@2
+            displayName: WebApp Identity Storage Account Permissions
+            inputs:
+              azureSubscription: ${{ variables.serviceConnection }}
+              failOnStandardError: true
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
                 # Bicep seems to ignores the identity parameter, so using the cli
                 echo "Setting WebApp Identity Storage Account Permissions"
                 storageId=$(az storage account show -n ${{ variables.storageAccountName }} -g ${{ variables.resourceGroup }} --query id -otsv)
-                echo "az webapp identity assign -g \"${{ variables.resourceGroup }}\" -n \"${{ variables.webAppName }}\" --identities [system] --role 'Contributor' --scope \"$storageId\""
-                az webapp identity assign -g "${{ variables.resourceGroup }}" -n "${{ variables.webAppName }}" --identities [system] --role 'Contributor' --scope "$storageId"
+                az webapp identity assign -g ${{ variables.resourceGroup }} -n ${{ variables.webAppName }} --identities [system] --role 'Contributor' --scope $storageId
               workingDirectory: '$(Pipeline.Workspace)'
