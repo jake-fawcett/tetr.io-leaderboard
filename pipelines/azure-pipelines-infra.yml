@@ -30,7 +30,7 @@ stages:
           python -m pip install pre-commit
           pre-commit install
           pre-commit run arm-bicep-psrule-linting --all-files
-        workingDirectory: 'application'
+        workingDirectory: '.'
     - task: Bash@3
       displayName: 'Pre-Commit Linting'
       continueOnError: true
@@ -42,7 +42,7 @@ stages:
           python -m pip install pre-commit
           pre-commit install
           SKIP=isort,yapf,black,flake8,bandit,arm-bicep-psrule-linting pre-commit run --all-files
-        workingDirectory: 'application'
+        workingDirectory: '.'
   - job: Build
     pool:
       vmImage: 'ubuntu-22.04'
