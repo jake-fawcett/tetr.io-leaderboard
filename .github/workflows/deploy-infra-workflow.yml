@@ -24,8 +24,8 @@ jobs:
         resourceGroupName: 'platform-tetris-dev'
         template: infrastructure/deployinfra.bicep
         parameters: >
-          storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot \
-          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1 \
+          storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot
+          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1
           webAppName=platform-tetris-webapp-dev webAppLinuxFxVersion=PYTHON|3.9
         additionalArguments: "--what-if"
         failOnStdErr: false
@@ -38,7 +38,7 @@ jobs:
         resourceGroupName: 'platform-tetris-dev'
         template: infrastructure/deployinfra.bicep
         parameters: >
-          storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot \
-          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1 \
+          storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot
+          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1
           webAppName=platform-tetris-webapp-dev webAppLinuxFxVersion=PYTHON|3.9
         failOnStdErr: false
