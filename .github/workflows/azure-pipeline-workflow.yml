@@ -1,19 +1,23 @@
+# This pipeline triggers the existing infra and app Azure DevOps Pipelines
 name: CI
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, reopened]
-    branches: 
-      - main
+# Commented so these don't run on every PR
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     types: [opened, reopened]
+#     branches: 
+#       - main
 
 jobs:
     build:
         name: Call Azure Pipeline
         runs-on: ubuntu-latest
         steps:
+        # The steps are successful if the pipeline has triggered not if the pipeline has succeeded
+        # Therefore, it triggers them near simultaneously 
         - name: Azure Pipelines Action
           uses: Azure/pipelines@v1
           with:

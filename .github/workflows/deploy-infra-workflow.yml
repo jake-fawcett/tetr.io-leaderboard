@@ -1,0 +1,42 @@
+on: [push]
+name: Azure ARM
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+
+      # What if against Bicep file
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: 'a33b898e-c78f-4532-a747-0598abda68a7'
+        resourceGroupName: 'platform-tetris-dev'
+        template: ../../infrastructure/deployinfra.bicep
+        parameters: >-
+         'storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot \
+          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1 \
+          webAppName=platform-tetris-webapp-dev webAppLinuxFxVersion=PYTHON|3.9'
+        additionalArguments: "--what-if"
+        failOnStdErr: false
+
+      # Deploy Bicep file
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: 'a33b898e-c78f-4532-a747-0598abda68a7'
+        resourceGroupName: 'platform-tetris-dev'
+        template: ../../infrastructure/deployinfra.bicep
+        parameters: >-
+         'storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot \
+          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1 \
+          webAppName=platform-tetris-webapp-dev webAppLinuxFxVersion=PYTHON|3.9'
+        failOnStdErr: false
