@@ -1,5 +1,9 @@
+# Deploy Bicep Infra using github actions
+name: Azure Bicep Infra Deployment
+
+# Run on Push to branch
 on: [push]
-name: Azure ARM
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
