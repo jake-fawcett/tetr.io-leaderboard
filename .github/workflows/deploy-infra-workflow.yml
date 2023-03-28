@@ -20,7 +20,7 @@ jobs:
       with:
         subscriptionId: 'a33b898e-c78f-4532-a747-0598abda68a7'
         resourceGroupName: 'platform-tetris-dev'
-        template: ../../infrastructure/deployinfra.bicep
+        template: infrastructure/deployinfra.bicep
         parameters: >-
          'storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot \
           webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1 \
@@ -34,7 +34,7 @@ jobs:
       with:
         subscriptionId: 'a33b898e-c78f-4532-a747-0598abda68a7'
         resourceGroupName: 'platform-tetris-dev'
-        template: ../../infrastructure/deployinfra.bicep
+        template: infrastructure/deployinfra.bicep
         parameters: >-
          'storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot \
           webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1 \
