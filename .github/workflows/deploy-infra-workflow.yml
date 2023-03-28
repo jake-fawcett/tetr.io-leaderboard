@@ -1,5 +1,9 @@
+# Deploy Bicep Infra using github actions
+name: Azure Bicep Infra Deployment
+
+# Run on Push to branch
 on: [push]
-name: Azure ARM
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -7,6 +11,8 @@ jobs:
 
       # Checkout code
     - uses: actions/checkout@main
+      with:
+        submodules: 'true'
 
       # Log into Azure
     - uses: azure/login@v1
@@ -15,16 +21,16 @@ jobs:
 
 
       # What if against Bicep file
-    - name: deploy
+    - name: what-if
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: 'a33b898e-c78f-4532-a747-0598abda68a7'
         resourceGroupName: 'platform-tetris-dev'
-        template: ../../infrastructure/deployinfra.bicep
-        parameters: >-
-         'storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot \
-          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1 \
-          webAppName=platform-tetris-webapp-dev webAppLinuxFxVersion=PYTHON|3.9'
+        template: infrastructure/deployinfra.bicep
+        parameters: >
+          storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot
+          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1
+          webAppName=platform-tetris-webapp-dev webAppLinuxFxVersion=PYTHON|3.9
         additionalArguments: "--what-if"
         failOnStdErr: false
 
@@ -34,9 +40,9 @@ jobs:
       with:
         subscriptionId: 'a33b898e-c78f-4532-a747-0598abda68a7'
         resourceGroupName: 'platform-tetris-dev'
-        template: ../../infrastructure/deployinfra.bicep
-        parameters: >-
-         'storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot \
-          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1 \
-          webAppName=platform-tetris-webapp-dev webAppLinuxFxVersion=PYTHON|3.9'
+        template: infrastructure/deployinfra.bicep
+        parameters: >
+          storageAccountName=stractdev storageAccountSku=Standard_LRS storageAccountTier=Hot
+          webAppServerName=platform-tetris-webapp-server-dev webAppServerKind=linux webAppServerSku=B1
+          webAppName=platform-tetris-webapp-dev webAppLinuxFxVersion=PYTHON|3.9
         failOnStdErr: false
